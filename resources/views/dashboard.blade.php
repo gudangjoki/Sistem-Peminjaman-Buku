@@ -76,18 +76,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                         <div class="col-md-8">
                             <div class="input-group input-group-md mb-3">
-                                <div class="input-group-prepend mr-5">
-                                    <button type="button" class="btn btn-default px-4 dropdown-toggle" data-toggle="dropdown">
-                                        Kategori
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li class="dropdown-item"><a href="#">Action</a></li>
-                                        <li class="dropdown-item"><a href="#">Another action</a></li>
-                                        <li class="dropdown-item"><a href="#">Something else here</a></li>
-                                        <!-- <li class="dropdown-divider"></li> -->
-                                        <li class="dropdown-item"><a href="#">Separated link</a></li>
-                                    </ul>
-                                </div>
+                                <select class="form-control btn btn-default px-4 dropdown-toggle">
+                                <option selected disabled>Kategori</option>
+                                @foreach ( $categories as $category )
+                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                                </select>
                                 <!-- /btn-group -->
                                 @include('component.search')
                             </div>
