@@ -97,7 +97,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="row">
                     @foreach ($books as $book)
                         <div class="col-md-3">@include('component.card')</div>
-                    @endforeach 
+                    @endforeach
                     </div>
                     <!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -126,6 +126,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- AdminLTE App -->
         <script src="{{ asset('lte/dist/js/adminlte.min.js ') }}"></script>
         <script>
+
             function dynamicInput() {
                 let data = document.querySelector(".search").value;
                 console.log(data);

@@ -54,5 +54,13 @@ class BookController extends Controller
         return view('dashboard', ['books' => $books, 'categories' => $categories, 'count_books' => $count_books_active, 'total_user' => $user_active]);
     }
 
+    public function book_detail(Request $request, string $book_code) {
+        if ($request->session()->get('user')) {
+            $user = $request->session()->get('user');
+            // dd($user);
+        }
 
+        $book = Book::where('book_code', '=', $book_code)->first();
+        return view('detail_pinjam_dashboard', ['book' => $book, 'user' => $user]);
+    }
 }

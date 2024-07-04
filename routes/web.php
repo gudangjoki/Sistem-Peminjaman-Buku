@@ -38,11 +38,12 @@ Route::post('/register_acc', [AuthController::class, 'register']);
 
 // fitur 4 dan 5
 Route::get('/books', [BookController::class, "index"]);
-Route::get('/books/{book_code}', [AdminController::class, "index_update_book"]);
+Route::get('/books/{book_code}', [BookController::class, "book_detail"]);
+Route::get('/books/{book_code}/update', [AdminController::class, "index_update_book"]);
 
 // fitur 8
 Route::post('/book', [AdminController::class, "book_upload"]);
-Route::put('/books/{book_code}', [AdminController::class, "update_book"]);
+Route::put('/books/{book_code}/update', [AdminController::class, "update_book"]);
 Route::post('/category', [AdminController::class, "add_book_category"]);
 
 //fitur 6, 7, 9
