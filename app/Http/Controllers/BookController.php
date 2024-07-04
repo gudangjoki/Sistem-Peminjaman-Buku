@@ -34,10 +34,10 @@ class BookController extends Controller
         $count_books = Book::all()->count();
         $user_active = User::all()->where('status', '=', 1)->count();
 
-        if (Session::has('user')) {
-            $user = Session::get('user');
-            dd($user);
-        }
+        // if (Session::has('user')) {
+        //     $user = Session::get('user');
+        //     dd($user);
+        // }
 
         // $request->session()->put('user', [
         //     'username' => $username,

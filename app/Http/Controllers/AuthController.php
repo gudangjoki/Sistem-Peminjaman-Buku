@@ -35,10 +35,10 @@ class AuthController extends Controller
                 array_push($roles, $role_user->role_id);
             }
     
-            $request->session()->put('user', [
-                'username' => $username,
-                'role_id' => $role_user->role_id
-            ]);
+            // $request->session()->put('user', [
+            //     'username' => $username,
+            //     'role_id' => $role_user->role_id
+            // ]);
     
             if ($admin) {
                 return redirect('/admin/dashboard');
