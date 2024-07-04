@@ -76,11 +76,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                         <div class="col-md-8">
                             <div class="input-group input-group-md mb-3">
-                                <select class="form-control btn btn-default px-4 dropdown-toggle">
-                                <option selected disabled>Kategori</option>
-                                @foreach ( $categories as $category )
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                @endforeach
+                                <select class="category form-control btn btn-default px-4 dropdown-toggle" onchange="getParamsQuery()">
+                                    <option selected disabled>Kategori</option>
+                                    @foreach ( $categories as $category )
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
                                 </select>
                                 <!-- /btn-group -->
                                 @include('component.search')
@@ -94,11 +94,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid px-md-5 pt-md-5 ml-0 mt-0">
-                    
                     <div class="row">
+                    @foreach ($books as $book)
                         <div class="col-md-3">@include('component.card')</div>
-                        <div class="col-md-3">@include('component.card')</div>
-                        <div class="col-md-3">@include('component.card')</div>
+                    @endforeach 
                     </div>
                     <!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -127,6 +126,37 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- AdminLTE App -->
         <script src="{{ asset('lte/dist/js/adminlte.min.js ') }}"></script>
         <script>
+            function dynamicInput() {
+                let data = document.querySelector(".search").value;
+                console.log(data);
+
+                let queryString = window.location.search;  // get url parameters
+                let params = new URLSearchParams(queryString);  // create url search params object
+                params.delete('search');  // delete city parameter if it exists, in case you change the dropdown more then once
+                params.append('search', document.querySelector(".search").value); // add selected city
+                document.location.href = "?" + params.toString(); // refresh the page with new url
+            }
+
+            function getParamsQuery() {
+                let queryString = window.location.search;  // get url parameters
+                let params = new URLSearchParams(queryString);  // create url search params object
+                params.delete('category');  // delete city parameter if it exists, in case you change the dropdown more then once
+                params.append('category', document.querySelector(".category").value); // add selected city
+                document.location.href = "?" + params.toString(); // refresh the page with new url
+
+                window.history.pushState({}, '', '?' + params.toString());
+
+                fetch('/books?' + params.toString())
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        // Handle the response data
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+
             $(document).ready(function() {
                 $('.card').each(function() {
                     var $cardBody = $(this).find('.card-body');
