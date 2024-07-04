@@ -9,9 +9,9 @@ class Book extends Model
 {
     use HasFactory;
 
-    protected $incrementing = false;
+    public $incrementing = false;
 
-    protected $timestamp = false;
+    public $timestamp = false;
     
     protected $fillable = [
         'book_code',

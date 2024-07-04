@@ -18,9 +18,7 @@ Route::get('/register', function () {
     return view('/register');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('admin.dashboard');
+Route::get('/books', [BookController::class, "index"])->name('admin.dashboard');
 
 Route::get('/admin', function () {
     return view('/admin/dashboard');

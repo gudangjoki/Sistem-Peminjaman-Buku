@@ -33,8 +33,13 @@ class BookController extends Controller
 
         $count_books = Book::all()->count();
         $user_active = User::all()->where('status', '=', 1)->count();
+
+        // $request->session()->put('user', [
+        //     'username' => $username,
+        //     'role_id' => $role_user->role_id
+        // ]);
         
-        return view('list-book', ['books' => $books, 'categories' => $categories, 'count_books' => $count_books, 'total_user' => $user_active]);
+        return view('dashboard', ['books' => $books, 'categories' => $categories, 'count_books' => $count_books, 'total_user' => $user_active]);
     }
 
 
