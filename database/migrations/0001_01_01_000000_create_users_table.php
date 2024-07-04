@@ -15,9 +15,9 @@ return new class extends Migration
             // $table->id();
             $table->string('username')->primary();
             $table->string('password');
-            $table->bigInteger('phone');
-            $table->string('address');
-            $table->boolean('status');
+            $table->bigInteger('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->boolean('status')->nullable();
 
             $table->integer('role_id');
             // $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
