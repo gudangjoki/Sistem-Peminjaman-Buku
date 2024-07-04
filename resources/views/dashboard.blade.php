@@ -67,44 +67,60 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </nav>
         <!-- /.navbar -->
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            <div class="content-header">
-                <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h1>Buku</h1>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="input-group input-group-md mb-3">
-                                <select class="category form-control btn btn-default px-4 dropdown-toggle" onchange="getParamsQuery()">
-                                    <option selected disabled>Kategori</option>
-                                    @foreach ( $categories as $category )
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                <!-- /btn-group -->
-                                @include('component.search')
+        @switch($result)
+            @case(in_array('home', $result) && in_array('dashboard', $result))
+                <div class="content-wrapper">
+                    <div class="content-header">
+                        <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h1>Buku</h1>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="input-group input-group-md mb-3">
+                                            <select class="category form-control btn btn-default px-4 dropdown-toggle" onchange="getParamsQuery()">
+                                                <option selected disabled>Kategori</option>
+                                                @foreach ( $categories as $category )
+                                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <!-- /btn-group -->
+                                            @include('component.search')
+                                        </div>
+                                        <!-- /input-group -->
+                                    </div>
+                                </div>
+                        </div><!-- /.container-fluid -->
+                    </div>
+                    <!-- /.content-header -->
+                    <!-- Main content -->
+                    <div class="content">
+                        <div class="container-fluid px-md-5 pt-md-5 ml-0 mt-0">
+                            <div class="row">
+                            @foreach ($books as $book)
+                                <div class="col-md-3">@include('component.card')</div>
+                            @endforeach 
                             </div>
-                            <!-- /input-group -->
+                            <!-- /.row -->
+                        </div><!-- /.container-fluid -->
+                    </div>
+                    <!-- /.content -->
+                </div>
+                <!-- /.content-wrapper -->
+                @break
+            @case(in_array('books', $result) && in_array($book->book_code, $result))
+                <div class="content-wrapper">
+                    <div class="content-header">
+                        <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                            <div class="container">@include('user.detail_pinjam')</div>
                         </div>
                     </div>
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
-            <!-- Main content -->
-            <div class="content">
-                <div class="container-fluid px-md-5 pt-md-5 ml-0 mt-0">
-                    <div class="row">
-                    @foreach ($books as $book)
-                        <div class="col-md-3">@include('component.card')</div>
-                    @endforeach 
-                    </div>
-                    <!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content -->
-        </div>
-        <!-- /.content-wrapper -->
+                </div>
+                @break
+            @default
+                <div>Section not found.</div>
+                @break
+        @endswitch 
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">

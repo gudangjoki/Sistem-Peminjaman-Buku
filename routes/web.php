@@ -30,18 +30,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/login', [AuthController::class, 'login_index']);
-// Route::get('/register', [AuthController::class, 'register_index']);
+Route::get('/login', [AuthController::class, 'login_index']);
+Route::get('/register', [AuthController::class, 'register_index']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register_acc', [AuthController::class, 'register']);
 
 // fitur 4 dan 5
-Route::get('/books', [BookController::class, "index"]);
+// Route::get('/books', [BookController::class, "index"]);
 Route::get('/books/{book_code}', [AdminController::class, "index_update_book"]);
 
 // fitur 8
-Route::post('/book', [AdminController::class, "book_upload"]);
+// Route::post('/book', [AdminController::class, "book_upload"]);
 Route::put('/books/{book_code}', [AdminController::class, "update_book"]);
 Route::post('/category', [AdminController::class, "add_book_category"]);
 
@@ -56,6 +56,13 @@ Route::get('/forfeits', [RentLogsController::class, "user_forfeit"]);
 
 //fitur 13
 Route::get('books/log_book/{book_code}', [RentLogsController::class, "log_rent_book"]);
+
+Route::get('/dashboard/{section}', [BookController::class, 'index']);
+Route::get('/books/{book_code}', [BookController::class, "book_detail"]);
+
+// Route::get('*', function() {
+//     return view("not_found");
+// });
 
 
 

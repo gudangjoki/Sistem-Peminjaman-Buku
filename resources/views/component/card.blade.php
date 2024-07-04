@@ -20,7 +20,7 @@
     <div class="card-footer">
         <div class="text-right">
         @if ($book->status == 1)
-            <a href='{{ $book->slug }}' class="btn btn-info ">Ayo Pinjam</a>
+            <a href='../books/{{ $book->book_code }}' class="btn btn-info ">Ayo Pinjam</a>
         @else
             <a href="" class="btn btn-info disabled">Ayo Pinjam</a>
         @endif
