@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('username');
             $table->uuid('book_code');
-            $table->timestamp('rent_date')->useCurrent();
+            $table->timestamp('rent_date')->nullable();
             $table->timestamp('return_date')->nullable();
             $table->timestamp('actual_return_date')->nullable();
 

@@ -23,39 +23,39 @@ class RentLogsController extends Controller
         return view("", ['rents' => $rents]);
     }
 
-    public function borrow_book(Request $request) {
+        public function borrow_book(Request $request) {
+            try {
+                // Assuming session user retrieval
+                $user = $request->session()->get('user');
+                if (!$user) {
+                    return response()->json(['error' => 'User not authenticated'], 401);
+                }
+        
+                // Validate the request
+                $validated = $request->validate([
+                    'username' => 'required|string',
+                    'book_code' => 'required|string|max:36',
+                ]);
+        
+                // $countBookRented = RentLog::where('username', $validated['username'])->count();
+                // if ($countBookRented >= 3) {
+                //     return response()->json(['error' => 'Dilarang meminjam buku lebih dari 3 kali'], 403);
+                // }
 
-        if (!Auth::check()) {
-            // return redirect();
+                // $rentLog = new RentLog();
+                // $rentLog->book_code = $validated['book_code'];
+                // $rentLog->username = $validated['username'];
+                // $rentLog->rent_date = Carbon::now();
+                // $rentLog->save();
+        
+                // return response()->json(['success' => 'Book rented successfully']);
+                // return redirect("../invoice/" . $validated['book_code']);
+                return response()->json(['redirect' => true, 'url' => url("/invoice/" . $validated['book_code'])]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        // cek apakah user sudah meminjam buku lebih dari 3
-
-        $user = Auth::user();
-
-        $count_book_rented = count(Book::where('username')->get(['book_code']));
-
-        if ($count_book_rented > 3) {
-            // return redirect()->withError('user forbidden to borrow more than 3 books');
-        }
-
-        $validated = $request->validate([
-            'book_code' => 'required|uuid|max:36',
-        ]);
-
-        $currTimeInSec = strftime(time().now());
-
-        $book = new Book;
-        $book->book_code = $validated['book_code'];
-        $book->rent_date = $currTimeInSec;
-
-        $return_date = $currTimeInSec + (3 * 24 * 60 * 60); 
-        $date_conversion = date("Y-m-d H:i:s", $return_date);
-        $book->return_date = $date_conversion;
-
-
-        $book->users()->attach($user->username);
     }
+    
 
     public function return_book(string $id_book) {
 

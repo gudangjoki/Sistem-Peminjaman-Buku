@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class BookController extends Controller
 {
     //
-    public function index(Request $request) {
+    public function index(Request $request, $section) {
         $categories = Category::all();
 
         $category_id = $request->query('category');
@@ -50,8 +50,23 @@ class BookController extends Controller
         //     'role_id' => $role_user->role_id
         // ]);
         // dd($count_books_active);
+        error_log('knt: ' . $request->fullUrl());
+        $url = $request->fullUrl();
+
+        $parsed_path_url = parse_url($url)['path'];
+
+        $segments = explode('/', trim($parsed_path_url, '/'));
+
+        $result = [];
+
+        foreach ($segments as $index => $segment) {
+            $result['segment' . ($index + 1)] = $segment;
+        }
         
-        return view('dashboard', ['books' => $books, 'categories' => $categories, 'count_books' => $count_books_active, 'total_user' => $user_active]);
+        // dd($result);
+        
+        
+        return view('dashboard', ['result' => $result, 'section' => $section, 'books' => $books, 'categories' => $categories, 'count_books' => $count_books_active, 'total_user' => $user_active]);
     }
 
     public function book_detail(Request $request, string $book_code) {
@@ -60,7 +75,23 @@ class BookController extends Controller
             // dd($user);
         }
 
+        error_log('knt: ' . $request->fullUrl());
+        $url = $request->fullUrl();
+
+        $parsed_path_url = parse_url($url)['path'];
+
+        $segments = explode('/', trim($parsed_path_url, '/'));
+
+        $result = [];
+
+        foreach ($segments as $index => $segment) {
+            $result['segment' . ($index + 1)] = $segment;
+        }
+
         $book = Book::where('book_code', '=', $book_code)->first();
-        return view('detail_pinjam_dashboard', ['book' => $book, 'user' => $user]);
+        if(empty($book)) {
+            return view('not_found');
+        }
+        return view('dashboard', ['book' => $book, 'result' => $result, 'user' => $user]);
     }
 }

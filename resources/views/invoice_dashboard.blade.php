@@ -9,7 +9,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AdminLTE 3 | Top Navigation</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
@@ -72,60 +72,96 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </nav>
         <!-- /.navbar -->
         <!-- Content Wrapper. Contains page content -->
-        @switch($result)
-        @case(in_array('home', $result) && in_array('dashboard', $result))
         <div class="content-wrapper">
-            <div class="content-header">
-                <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h1>Buku</h1>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="input-group input-group-md mb-3">
-                                <select class="category form-control btn btn-default px-4 dropdown-toggle" onchange="getParamsQuery()">
-                                    <option selected disabled>Kategori</option>
-                                    @foreach ( $categories as $category )
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                                <!-- /btn-group -->
-                                @include('component.search')
-                            </div>
-                            <!-- /input-group -->
-                        </div>
-                    </div>
-                </div><!-- /.container-fluid -->
-            </div>
             <!-- /.content-header -->
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid px-md-5 pt-md-5 ml-0 mt-0">
-                    <div class="row">
-                        @foreach ($books as $book)
-                        <div class="col-md-3">@include('component.card')</div>
-                        @endforeach
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="callout callout-info">
+                                    <h5><i class="fas fa-info"></i> Note:</h5>
+                                    Harap segera mendatangi perpustakaan kami untuk mengambil buku yang akan dipinjam, tujukan kode peminjaman kepada petugas untuk mendapatkan buku
+                                </div>
+
+
+                                <!-- Main content -->
+                                <div class="invoice p-3 mb-3">
+                                    <!-- title row -->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4>
+                                            <i class="fas fa-globe"></i> AdminLTE, Inc.
+                                            <!-- <small class="float-right">Date: 2/10/2014</small> -->
+                                            </h4>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- info row -->
+                                    <div class="row invoice-info mb-4">
+                                        <div class="col-sm-8 invoice-col">
+                                            <address>
+                                            <strong>{{ $user->username }}</strong><br>
+                                            Alamat: {{ $user->address }}<br>
+                                            Phone: {{ $user->phone }}<br>
+                                            </address>
+                                        </div>
+                                        <!-- /.col -->  
+                                        <div class="col-sm-4 invoice-col">
+                                            <b>Invoice #{{$book->id}}</b><br>
+                                            <br>
+                                            <b>Tanggal Dipinjam:</b>{{$book->rent_date}}<br>
+                                            <b>Tanggal Dikembalikan:</b>{{$book->return_date}}<br>
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+
+                                    <!-- Table row -->
+                                    <div class="row">
+                                        <div class="col-12 table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Kode Buku</th>
+                                                        <th>Judul</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{ $book->book_code }}</td>
+                                                        <td>{{ $title }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+
+                                    <!-- this row will not appear when printing -->
+                                    <div class="row no-print">
+                                        <div class="col-12 text-right">
+                                            <a href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default mx-3"><i class="fas fa-print"></i> Print</a>
+                                            <button type="button" class="btn btn-primary" style="margin-right: 5px;">
+                                            <i class="fas fa-download"></i> Generate PDF
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.invoice -->
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+      
                     </div>
+
                     <!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        @break
-        @case(in_array('books', $result) && in_array($book->book_code, $result))
-        <div class="content-wrapper">
-            <div class="content-header">
-                <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                    <div class="container">@include('user.detail_pinjam')</div>
-                </div>
-            </div>
-        </div>
-        @break
-        @default
-        <div>Section not found.</div>
-        @break
-        @endswitch
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
@@ -147,46 +183,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- AdminLTE App -->
     <script src="{{ asset('lte/dist/js/adminlte.min.js ') }}"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const rentButton = document.querySelector('.rent-button');
-
-    if (rentButton) {
-        rentButton.addEventListener('click', function() {
-            const bookCode = rentButton.getAttribute('data-book_code');
-            const username = rentButton.getAttribute('data-username');
-
-            console.log(bookCode);
-
-            fetch('/rent_book', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: new URLSearchParams({
-                    'book_code': bookCode,
-                    'username': username
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.redirect) {
-                    window.location.href = data.url;
-                }
-                console.log(data.error);
-                if (data.error) {
-                    alert(data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
-    }
-});
-
-
-
         function dynamicInput() {
             let data = document.querySelector(".search").value;
             console.log(data);

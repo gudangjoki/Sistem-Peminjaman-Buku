@@ -17,9 +17,14 @@
             <p>{{ $book->description }}</p>
 
             <div class="mt-4 text-right">
-                <button class="btn btn-primary btn-lg ">
-                    Pinjam Sekarang
-                </button>
+                <!-- <form action="../rent_book" method="POST" id="rentBookForm"> -->
+                    <!-- @csrf -->
+                    <button type="submit" class="rent-button btn btn-primary btn-lg"
+                        data-book_code="{{ $book->book_code }}" 
+                        data-username="{{ $user['username'] }}">
+                            Pinjam Sekarang
+                    </button>
+                <!-- </form> -->
             </div>
 
         </div>

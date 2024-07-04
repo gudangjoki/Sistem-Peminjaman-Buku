@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\RentLog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -63,5 +65,26 @@ class ReaderController extends Controller
         }
 
         return view("", ['book' => $target]);
+    }
+
+    public function invoice(Request $request, String $book_code) {
+        $user = $request->session()->get('user');
+            if (!$user) {
+                return response()->json(['error' => 'User not authenticated'], 401);
+            }
+
+        $book = RentLog::where("book_code", "=", $book_code)->where("username", "=", $user)->whereNull("rent_date")->first();
+
+        $data = Book::where("book_code", "=", $book_code)->first();
+
+        $user = User::where("username", "=", $user["username"])->first();
+        
+        $title = $data->title;
+
+        if(empty($book)) {
+            dd($book);
+        }
+
+        return view('invoice_dashboard', ['book' => $book, 'title' => $title, 'user' => $user]);
     }
 }

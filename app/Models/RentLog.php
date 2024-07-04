@@ -9,7 +9,10 @@ class RentLog extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
+        'id',
         'username',
         'book_id',
         'rent_date',
