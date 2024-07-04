@@ -17,51 +17,50 @@ class AuthController extends Controller
     public function login(Request $request) {
         $username_req = $request->username;
         $user = User::where('username', $username_req)->first();
-
-            if ($user && Hash::check($request->password, $user->password)) {
-
-                // $request->session()->put('user', $user);
-                $username = $user->username;
-                // $role = $user->role;
-                $role_user = User::leftJoin("role_user", "users.username", "=", "role_user.username")->select('role_user.role_id', 'users.username')->where('users.username', strval($username))->get();
-
-                error_log($role_user);
-                // $role = $role_user->role_id;
-
-                $admin = false;
-                $roles = [];
-                
-                foreach ( $role_user as $user ) {
-                    if ( $user->role_id == 2 ) {
-                        $admin = true;
-                        break;
-                    }
-
-                    array_push($roles, $user->role_id);
-                    
-                }
-
-                if ($admin) {
-                    return redirect()->route('admin.dashboard');
-                }
-
-                $roles_tb = Role::select('id', 'name')->where('id', '>=', 3)->get();
-                error_log($roles_tb);
-
-                if (count($roles) == 1 && in_array(1, $roles)) {
-                    return redirect()->route('guest.dashboard');
-                }
-
-                foreach ($roles_tb as $role) {
-                    if (in_array($role->id, $roles)) {
-                        return redirect()->route($role->name . '.dashboard');
-                    }
-                }
-
-                return redirect('login')->withErrors(['username' => 'no role assigned in this username']);
-            } else {
-                return redirect('login')->withErrors(['username' => 'Invalid username or password']);
+    
+        if ($user && Hash::check($request->password, $user->password)) {
+            $username = $user->username;
+            $role_user = User::where('username', '=', $username)->select('role_id')->first();
+    
+            if (!$role_user) {
+                return redirect('login')->withErrors(['username' => 'No role assigned to this username']);
             }
+    
+            $admin = false;
+            $roles = [];
+    
+            if ($role_user->role_id == 1) {
+                $admin = true;
+            } else {
+                array_push($roles, $role_user->role_id);
+            }
+    
+            // Store user information in session
+            $request->session()->put('user', [
+                'username' => $username,
+                'role_id' => $role_user->role_id
+            ]);
+    
+            if ($admin) {
+                return redirect()->route('admin.dashboard');
+            }
+    
+            if (count($roles) == 1 && in_array(2, $roles)) {
+                return redirect()->route('renter.dashboard');
+            }
+    
+            $roles_tb = Role::select('id', 'name')->where('id', '>=', 3)->get();
+    
+            foreach ($roles_tb as $role) {
+                if (in_array($role->id, $roles)) {
+                    return redirect()->route($role->name . '.dashboard');
+                }
+            }
+    
+            return redirect('login')->withErrors(['username' => 'No appropriate role assigned to this username']);
+        } else {
+            return redirect('login')->withErrors(['username' => 'Invalid username or password']);
+        }
     }
 
     public function register_index() {
