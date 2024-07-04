@@ -125,4 +125,19 @@ class AdminController extends Controller
     public function list_user() {
         User::all();
     }
+    public function dashboard(Request $request, $section) {
+        error_log('knt: ' . $request->fullUrl());
+        $url = $request->fullUrl();
+
+        $parsed_path_url = parse_url($url)['path'];
+
+        $segments = explode('/', trim($parsed_path_url, '/'));
+
+        $result = [];
+
+        foreach ($segments as $index => $segment) {
+            $result['segment' . ($index + 1)] = $segment;
+        }
+        return view('admin/dashboard',['result' => $result, 'section' => $section]);
+    }
 }

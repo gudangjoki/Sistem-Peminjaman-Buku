@@ -57,12 +57,12 @@ Route::get('/forfeits', [RentLogsController::class, "user_forfeit"]);
 //fitur 13
 Route::get('books/log_book/{book_code}', [RentLogsController::class, "log_rent_book"]);
 
-Route::get('/dashboard/{section}', [BookController::class, 'index']);
+Route::get('/dashboard/home', [BookController::class, 'index']);
 Route::get('/books/{book_code}', [BookController::class, "book_detail"]);
 
 // Route::get('*', function() {
 //     return view("not_found");
 // });
-
+Route::get('/dashboard/{section}', [AdminController::class, 'dashboard']);
 
 

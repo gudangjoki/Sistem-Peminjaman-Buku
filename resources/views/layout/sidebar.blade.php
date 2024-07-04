@@ -36,26 +36,63 @@
                     <a href="#" class="nav-link active">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            Dashboard
+                            List
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="./index.html" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Dashboard v1</p>
+                            <a href="log" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Log Peminjaman</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="buku" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>List Buku</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="denda" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>List Denda</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="pinjam" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>List Pinjam</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="user" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>List User</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="kategori" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>List Kategori</p>
                             </a>
                         </li>
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="pages/widgets.html" class="nav-link">
-                    <i class="nav-icon fas fa-th"></i>
-                    <p>
-                        Widgets
-                        <span class="right badge badge-danger">New</span>
-                    </p>
+                    <a href="req" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Active Request 
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="confirm" class="nav-link">
+                        <i class="nav-icon fas fa-th"></i>
+                        <p>
+                            Konfirmasi
+                        </p>
                     </a>
                 </li>
             </ul>

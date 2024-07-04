@@ -5,16 +5,7 @@
                 #
             </th>
             <th style="width: 20%">
-                Penyewa
-            </th>
-            <th style="width: 30%">
-                Kode Buku
-            </th>
-            <th style="width: 30%">
-                Judul Buku
-            </th>
-            <th style="width: 8%" class="text-center">
-                Status
+                Nama Kategori
             </th>
             <th style="width: 20%">
             </th>
@@ -26,22 +17,18 @@
                 #
             </td>
             <td>
-                wedz
-            </td>
-            <td>
-                jud
-            </td>
-            <td>
-                judul
-            </td>
-            <td class="project-state">
-                <span class="badge badge-success">Success</span>
+                a
             </td>
             <td class="project-actions text-right">
                 <a class="btn btn-warning btn-sm" href="#">
+                    <i class="fas fa-pencil-alt">
+                    </i>
+                    Edit
+                </a>
+                <a class="btn btn-danger btn-sm" href="#">
                     <i class="fas fa-trash">
                     </i>
-                    Konfirmasi
+                    Delete
                 </a>
             </td>
         </tr>
