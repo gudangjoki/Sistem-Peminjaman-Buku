@@ -14,15 +14,14 @@ return new class extends Migration
         Schema::create('rent_logs', function (Blueprint $table) {
             $table->id();
             $table->string('username');
-            $table->uuid('book_id');
+            $table->uuid('book_code');
             $table->timestamp('rent_date')->useCurrent();
             $table->timestamp('return_date')->nullable();
             $table->timestamp('actual_return_date')->nullable();
 
-            // $table->primary(['username', 'book_id']);
 
             $table->foreign('username')->references('username')->on('users')->onDelete('cascade');
-            $table->foreign('book_id')->references('book_code')->on('books')->onDelete('cascade');
+            $table->foreign('book_code')->references('book_code')->on('books')->onDelete('cascade');
         });
     }
 

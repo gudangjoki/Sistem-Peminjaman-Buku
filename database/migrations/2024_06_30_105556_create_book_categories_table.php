@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('book_categories', function (Blueprint $table) {
-            $table->uuid('book_id');
+            $table->uuid('book_code');
             $table->bigInteger('category_id')->unsigned();
 
-            $table->primary(['book_id', 'category_id']);
+            $table->primary(['book_code', 'category_id']);
 
-            $table->foreign('book_id')->references('book_code')->on('books')->onDelete('cascade');
+            $table->foreign('book_code')->references('book_code')->on('books')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
