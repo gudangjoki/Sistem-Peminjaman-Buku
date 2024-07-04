@@ -84,7 +84,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         <li class="dropdown-item"><a href="#">Action</a></li>
                                         <li class="dropdown-item"><a href="#">Another action</a></li>
                                         <li class="dropdown-item"><a href="#">Something else here</a></li>
-                                        <li class="dropdown-divider"></li>
+                                        <!-- <li class="dropdown-divider"></li> -->
                                         <li class="dropdown-item"><a href="#">Separated link</a></li>
                                     </ul>
                                 </div>

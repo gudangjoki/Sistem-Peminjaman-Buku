@@ -18,8 +18,6 @@ Route::get('/register', function () {
     return view('/register');
 });
 
-Route::get('/books', [BookController::class, "index"])->name('admin.dashboard');
-
 Route::get('/admin', function () {
     return view('/admin/dashboard');
 });
@@ -40,7 +38,7 @@ Route::post('/register_acc', [AuthController::class, 'register']);
 
 // fitur 4 dan 5
 Route::get('/books', [BookController::class, "index"]);
-Route::get('/books/{book_code}', [AdminController::class, "update_book"]);
+Route::get('/books/{book_code}', [AdminController::class, "index_update_book"]);
 
 // fitur 8
 Route::post('/book', [AdminController::class, "book_upload"]);
