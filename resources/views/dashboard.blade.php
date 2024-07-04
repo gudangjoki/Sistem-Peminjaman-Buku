@@ -94,12 +94,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid px-md-5 pt-md-5 ml-0 mt-0">
-                    
-                    <div class="row">
-                        <div class="col-md-3">@include('component.card')</div>
-                        <div class="col-md-3">@include('component.card')</div>
-                        <div class="col-md-3">@include('component.card')</div>
-                    </div>
+                        <div class="container">
+                            @include('user.list_pinjam')
+                        </div>
                     <!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>

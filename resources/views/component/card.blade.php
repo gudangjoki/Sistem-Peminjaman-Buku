@@ -17,7 +17,7 @@
     <!-- /.card-body -->
     <div class="card-footer">
         <div class="text-right">
-            <a href="/log_book/{book_code}" class="btn btn-info ">Ayo Pinjam</a>
+            <a href="/detail" class="btn btn-info ">Ayo Pinjam</a>
         </div>   
     </div>
     <!-- /.card-footer -->

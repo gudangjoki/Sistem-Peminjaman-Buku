@@ -56,3 +56,6 @@ Route::get('/forfeits', [RentLogsController::class, "user_forfeit"]);
 
 //fitur 13
 Route::get('books/log_book/{book_code}', [RentLogsController::class, "log_rent_book"]);
+
+
+
