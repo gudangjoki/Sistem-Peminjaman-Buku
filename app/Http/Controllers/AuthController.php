@@ -35,18 +35,17 @@ class AuthController extends Controller
                 array_push($roles, $role_user->role_id);
             }
     
-            // Store user information in session
             $request->session()->put('user', [
                 'username' => $username,
                 'role_id' => $role_user->role_id
             ]);
     
             if ($admin) {
-                return redirect()->route('admin.dashboard');
+                return redirect('/admin/dashboard');
             }
     
             if (count($roles) == 1 && in_array(2, $roles)) {
-                return redirect()->route('renter.dashboard');
+                return redirect('/books');
             }
     
             $roles_tb = Role::select('id', 'name')->where('id', '>=', 3)->get();
