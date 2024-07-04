@@ -23,25 +23,179 @@
             <!-- Main Sidebar Container -->
             @include('layout.sidebar')
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
-                <!-- Content Header (Page header) -->
-                <div class="content-header">
-                    <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                    
-                    </div><!-- /.container-fluid -->
-                </div>
-                <!-- /.content-header -->
+            @switch($result)
+                @case(in_array('log', $result))
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>Log Peminjman</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
 
-                <!-- Main content -->
-                <section class="content">
-                    <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                        @include('admin/list_book')
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/log_pinjam')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
                     </div>
-                    <!--/. container-fluid -->
-                </section>
-                <!-- /.content -->
-            </div>
-            <!-- /.content-wrapper -->
+                    <!-- /.content-wrapper -->
+                    @break
+                @case(in_array('buku', $result)  )
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>List Buku</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/list_book')     
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- /.content-wrapper -->
+                    @break
+                @case(in_array('denda', $result)  )
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>List Denda</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/list_denda')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- /.content-wrapper -->
+                    @break
+                @case(in_array('pinjam', $result)  )
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>List Peminjman</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/list_pinjam')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- /.content-wrapper -->
+                    @break
+                @case(in_array('user', $result)  )
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>List Users</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/list_user')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- /.content-wrapper -->
+                    @break
+                @case(in_array('kategori', $result)  )
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>List Kategori</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/list_kategori')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- /.content-wrapper -->
+                    @break
+                @case(in_array('req', $result)  )
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>Permintaan Users</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/list_user_request')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- /.content-wrapper -->
+                    @break
+                @case(in_array('confirm', $result)  )
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>Konfirmasi Peminjaman</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/list_konfirmasi')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- /.content-wrapper -->
+                    @break
+                @default
+                    <div>Section not found.</div>
+                    @break
+            @endswitch 
 
             <!-- Control Sidebar -->
             <aside class="control-sidebar control-sidebar-dark">

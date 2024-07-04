@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class BookController extends Controller
 {
     //
-    public function index(Request $request, $section) {
+    public function index(Request $request) {
         $categories = Category::all();
 
         $category_id = $request->query('category');
@@ -66,7 +66,7 @@ class BookController extends Controller
         // dd($result);
         
         
-        return view('dashboard', ['result' => $result, 'section' => $section, 'books' => $books, 'categories' => $categories, 'count_books' => $count_books_active, 'total_user' => $user_active]);
+        return view('dashboard', ['result' => $result, 'books' => $books, 'categories' => $categories, 'count_books' => $count_books_active, 'total_user' => $user_active]);
     }
 
     public function book_detail(Request $request, string $book_code) {
