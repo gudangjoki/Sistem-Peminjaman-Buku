@@ -15,6 +15,20 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <link rel="stylesheet" href="{{ asset('lte/plugins/fontawesome-free/css/all.min.css') }}">
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css') }}">
+        <style>
+            .text-muted.text-sm {
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .card-body img {
+                width: 100%;
+                height: 200px; /* You can adjust the height as needed */
+                object-fit: cover; /* Ensures the image covers the area without distorting */
+            }
+        </style>
     </head>
     <body class="hold-transition layout-top-nav dark-mode">
         <div class="wrapper">
@@ -41,18 +55,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <a href="#" class="nav-link">Contact</a>
                         </li>
                     </ul>
-
-                    <!-- SEARCH FORM -->
-                    <form class="form-inline ml-0 ml-md-3">
-                        <div class="input-group input-group-sm">
-                            <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-                            <div class="input-group-append">
-                            <button class="btn btn-navbar" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
 
                 <!-- Right navbar links -->
@@ -66,13 +68,43 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- /.navbar -->
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-
+            <div class="content-header">
+                <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h1>Buku</h1>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-group input-group-md mb-3">
+                                <div class="input-group-prepend mr-5">
+                                    <button type="button" class="btn btn-default px-4 dropdown-toggle" data-toggle="dropdown">
+                                        Kategori
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown-item"><a href="#">Action</a></li>
+                                        <li class="dropdown-item"><a href="#">Another action</a></li>
+                                        <li class="dropdown-item"><a href="#">Something else here</a></li>
+                                        <li class="dropdown-divider"></li>
+                                        <li class="dropdown-item"><a href="#">Separated link</a></li>
+                                    </ul>
+                                </div>
+                                <!-- /btn-group -->
+                                @include('component.search')
+                            </div>
+                            <!-- /input-group -->
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
             <!-- Main content -->
             <div class="content">
                 <div class="container-fluid px-md-5 pt-md-5 ml-0 mt-0">
-                    @include('user/invoice')
+                    
                     <div class="row">
-                        <div class="col-md-3"></div>
+                        <div class="col-md-3">@include('component.card')</div>
+                        <div class="col-md-3">@include('component.card')</div>
+                        <div class="col-md-3">@include('component.card')</div>
                     </div>
                     <!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -100,5 +132,36 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <script src="{{ asset('lte/plugins/bootstrap/js/bootstrap.bundle.min.js ') }}"></script>
         <!-- AdminLTE App -->
         <script src="{{ asset('lte/dist/js/adminlte.min.js ') }}"></script>
+        <script>
+            $(document).ready(function() {
+                $('.card').each(function() {
+                    var $cardBody = $(this).find('.card-body');
+                    var $p = $cardBody.find('p');
+                    var $readMoreBtn = $cardBody.find('.read-more');
+
+                    if ($p[0].scrollHeight > $p.outerHeight()) {
+                        $readMoreBtn.show();
+                    }
+
+                    $readMoreBtn.on('click', function() {
+                        if ($p.hasClass('expanded')) {
+                            $p.removeClass('expanded').css({
+                                '-webkit-line-clamp': '2',
+                                'overflow': 'hidden',
+                                'text-overflow': 'ellipsis'
+                            });
+                            $(this).text('Read More');
+                        } else {
+                            $p.addClass('expanded').css({
+                                '-webkit-line-clamp': 'unset',
+                                'overflow': 'visible',
+                                'text-overflow': 'unset'
+                            });
+                            $(this).text('Read Less');
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
