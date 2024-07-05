@@ -16,25 +16,29 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($pinjam as $pjm)
+        @php
+            $groupedBooks = $pinjam->groupBy('book_code');
+        @endphp
+
+        @foreach($groupedBooks as $book_code => $books)
         <tr>
             <td>
                 {{$loop->iteration}}
             </td>
             <td>
                 <a>
-                    {{ $pjm->title }}
+                    {{ $books->first()->title }}
                 </a>
                 <br/>
                 <small>
-                    {{ $pjm->book_code }}
+                    {{ $book_code }}
                 </small>
             </td>
             <td class="project-state">
-                {{ $pjm->category_name }}
+                {{ $books->pluck('category_name')->unique()->implode(', ') }}
             </td>
             <td class="project-state">
-                @if ($pjm->status == 1)
+                @if ($books->pluck('status')->contains(1))
                     <span class="badge badge-success">Tersedia</span>
                 @else 
                     <span class="badge badge-warning">Dipinjam</span>
