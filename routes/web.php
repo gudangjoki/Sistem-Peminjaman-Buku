@@ -28,9 +28,9 @@ Route::get('/user', function () {
     return view('/admin/dashboard');
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/login', [AuthController::class, 'login_index']);
 Route::get('/register', [AuthController::class, 'register_index']);

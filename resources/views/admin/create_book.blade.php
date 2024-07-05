@@ -5,7 +5,7 @@
     </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <form action="http://127.0.0.1:8000/buku" method="post" enctype="multipart/form-data">
+            <form action="/buku" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-sm-6">
@@ -27,7 +27,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label>Kategori</label>
-                                <select name="category" class="category form-control btn btn-default px-4 dropdown-toggle" onchange="getParamsQuery()">
+                                <select name="category" class="category form-control btn btn-default px-4 dropdown-toggle">
                                     <option selected disabled>Kategori</option>
                                     @foreach ( $categories as $category )
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>

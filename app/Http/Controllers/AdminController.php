@@ -152,7 +152,7 @@ class AdminController extends Controller
             ]);
         }
     
-        return response()->json(['message' => 'Book uploaded successfully'], 200);
+        return redirect()->back()->with('status', 'success');
     }    
 
     public function update_book(Request $request, string $book_code) {
@@ -279,9 +279,9 @@ class AdminController extends Controller
         }else if(in_array('user', $result)){
             $users = DB::table('users') ->get();
         }else if(in_array('log', $result)){
-            $logs = DB::table('rent_logs') ->get();
+            $logs = DB::table('rent_logs')->get();
         }else if(in_array('kategori', $result)){
-            $categories = DB::table('categories') ->get();
+            $categories = DB::table('categories')->get();
         }else if(in_array('confirm', $result)){
             $confirm = DB::table('rent_logs')
             ->join('books', 'rent_logs.book_code', '=', 'books.book_code')
@@ -358,6 +358,9 @@ class AdminController extends Controller
 
 
         }
+
+        $categories = Category::all();
+
         return view('admin/dashboard', ['result' => $result, 'section' => $section, 'books' => $books, 'pinjam' => $pinjam, 'users' => $users, 'logs' => $logs, 'categories'=> $categories, 'confirm' => $confirm, 'reqs' => $reqs]);
         return view('admin/dashboard', ['result' => $result, 'section' => $section, 'books' => $books, 'arrs' => $arr, 'users' => $users]);
     }
