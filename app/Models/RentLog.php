@@ -14,19 +14,17 @@ class RentLog extends Model
     protected $fillable = [
         'id',
         'username',
-        'book_id',
+        'book_code',
         'rent_date',
         'return_date',
         'actual_return_date'
     ];
 
-    public function user()
-    {
+    public function user() {
         return $this->belongsTo(User::class);
     }
 
-    public function book()
-    {
-        return $this->belongsTo(Book::class);
+    public function book() {
+        return $this->belongsTo(Book::class, 'book_code', 'book_code');
     }
 }

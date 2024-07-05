@@ -10,8 +10,8 @@ class Book extends Model
     use HasFactory;
 
     public $incrementing = false;
-
     public $timestamps = false;
+    protected $primaryKey = 'book_code';
     
     protected $fillable = [
         'book_code',

@@ -101,4 +101,24 @@ class RentLogsController extends Controller
 
         return view("", ['logs_book' => $logRent]);
     }
+
+    public function update_status_denda(Request $request, string $username) {
+        $data = json_decode($request->input('data'), true); // Decode the JSON data
+        dd($data); // For debugging
+    
+        foreach ($data as $item) {
+            $book_code = $item['book_code'];
+            $dateDay = Carbon::now()->addDays(3);
+            $rentLog = RentLog::where('username', $username)
+                              ->where('book_code', $book_code)
+                              ->where('return_date', '<', $dateDay->toDateTimeString());
+    
+            $logData = $rentLog->get(['id', 'book_code']);
+    
+            RentLog::whereIn('id', $logData->pluck('id'))->update(['status' => 1]);
+    
+            Book::where('book_code', $book_code)->update(['status' => 1]);
+        }
+    }
+    
 }

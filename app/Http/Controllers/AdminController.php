@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\RentLog;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -160,14 +162,17 @@ class AdminController extends Controller
         $book = Book::where("book_code", "=", $book_code)->first();
 
         if ( $book == null ) {
-            return redirect()->withErrors("book not found in database");
+            return redirect("../../books")->withErrors("book not found in database");
         }
+
+        // dd($request->all());
 
         $validated = $request->validate([
             // 'name' => 'required|string|max:255',
             'title' => 'required|string|max:255',
+            // 'book_code' => 'required|uuid',
             'description' => 'required|string|max:255',
-            'status' => 'required|boolean',
+            // 'status' => 'required|boolean',
             'cover' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
@@ -184,18 +189,25 @@ class AdminController extends Controller
             $book->cover = $filePath . $fileName;
         }
 
+        $book->book_code = $book_code;
         $book->title = $validated['title'];
         $book->description = $validated['description'];
         $book->status = 1;
 
-        // $book->categories()->attach($request->category);
-        if ($request->has('category')) {
-            $book->categories()->sync($request->category);
-        }
-
         $book->save();
 
-        return redirect("/");
+        // dd($request->category);
+
+        // $book->categories()->attach($request->category);
+        if ($request->has('category')) {
+            DB::table('book_categories')
+            ->where('book_code', $book->book_code)
+            ->update([
+                'category_id' => $request->category
+            ]);
+        }
+
+        return redirect("../../dashboard/buku");
     }
 
     public function book_list_rented() {
@@ -208,55 +220,154 @@ class AdminController extends Controller
         // return view();
     }
 
-    public function list_user() {
-        User::all();
-    }
-    public function dashboard(Request $request, $section) {
+    // public function list_user() {
+    //     User::all();
+    // }
 
+    public function dashboard(Request $request, $section) {
         error_log('knt: ' . $request->fullUrl());
         $url = $request->fullUrl();
-
-        $parsed_path_url = parse_url($url)['path'];
-
+    
+        $parsed_path_url = parse_url($url);
+        $parsed_path_url = isset($parsed_path_url['path']) ? $parsed_path_url['path'] : '';
+    
         $segments = explode('/', trim($parsed_path_url, '/'));
-
+    
         $result = [];
-
+    
         foreach ($segments as $index => $segment) {
             $result['segment' . ($index + 1)] = $segment;
         }
-        
+    
         $books = [];
-
+    
         if (in_array('buku', $result)) {
-
-            // $categories = Category::all();
-
             $category_id = $request->query('category');
             $search = $request->query('search');
-    
+            
             error_log($category_id);
     
             if ($category_id && empty($search)) {
                 $books = Book::leftJoin('book_categories', 'books.book_code', '=', 'book_categories.book_code')
-                ->where('book_categories.category_id', $category_id)
-                ->get();
-    
-                error_log($books);
-    
+                    ->where('book_categories.category_id', $category_id)
+                    ->get();
             } else if (empty($category_id) && $search) {
                 $books = Book::where('title', 'like', '%' . $search . '%')->get();
-            }
-            
-            else if ($search && $category_id){
-                $books = Book::leftJoin('book_categories', 'books.book_code', '=', 'book_categories.book_code')->where('book_categories.category_id', $category_id)->where('title', 'like', '%' . $search . '%')->get();
-            }   
-    
-            else {
+            } else if ($search && $category_id) {
+                $books = Book::leftJoin('book_categories', 'books.book_code', '=', 'book_categories.book_code')
+                    ->where('book_categories.category_id', $category_id)
+                    ->where('title', 'like', '%' . $search . '%')
+                    ->get();
+            } else {
                 $books = Book::all();
             }
         }
+    
+        if (in_array('denda', $result)) {
+            $currTimeSec = Carbon::now()->toDateTimeString();
 
-        return view('admin/dashboard', ['result' => $result, 'section' => $section, 'books' => $books]);
+            $dateDay = Carbon::now()->addDays(3);
+
+            // dd($currTimeSec);
+
+            $logs = RentLog::whereNull('actual_return_date')->get(['id', 'return_date']);
+
+            $forfeit_id = [];
+            foreach ($logs as $log) {
+                if ($log->return_date < $dateDay->toDateTimeString()) {
+                    $forfeit_id[] = $log->id;
+                }
+            }
+
+            // dd($forfeit_id);
+
+            $forfeit_users = RentLog::whereIn('id', $forfeit_id)
+            ->distinct('username')
+            ->pluck('username');
+
+            // dd($forfeit_users);
+
+            $users = User::whereIn('username', $forfeit_users)->get(['username', 'phone']);
+
+            // dd($forfeit_id);
+
+            // $books = RentLog::where('id', $forfeit_id)->get(['book_code']);
+            
+            // Book::whereget();
+
+            $arr = [];
+            foreach ($users as $user) {
+                foreach ($forfeit_id as $id) {
+                    if (RentLog::where('id', $id)->where('username', $user->username)->where('return_date', '<', $dateDay->toDateTimeString())->exists()) {
+                        if (!isset($arr[$user->username])) {
+                            $arr[$user->username] = [];
+                        }
+                        $book_code = RentLog::where('id', $id)->value('book_code');
+                        $book = Book::where('book_code', $book_code)->get();
+                        $arr[$user->username][] = $book; // Add the id to the array for this username
+                    }
+                }
+            }
+
+            // dd($arr);
+
+            // $forfeit_users = User::join('rent_logs', 'users.username', '=', 'rent_logs.username')
+            //     ->where('rent_logs.return_date', '>', $currTimeSec)
+            //     ->select('users.*')
+            //     ->distinct()
+            //     ->get();
+
+
+        }
+    
+        return view('admin/dashboard', ['result' => $result, 'section' => $section, 'books' => $books, 'arrs' => $arr, 'users' => $users]);
+    }
+    
+    public function view_book_warning() {
+        $currTimeSec = Carbon::now()->toDateTimeString();
+
+        $dateDay = Carbon::now()->addDays(3);
+
+        // dd($currTimeSec);
+
+        $logs = RentLog::whereNull('actual_return_date')->get(['id', 'return_date']);
+
+        $forfeit_id = [];
+        foreach ($logs as $log) {
+            if ($log->return_date < $dateDay->toDateTimeString()) {
+                $forfeit_id[] = $log->id;
+            }
+        }
+
+        // dd($forfeit_id);
+
+        $forfeit_users = RentLog::whereIn('id', $forfeit_id)
+        ->distinct('username')
+        ->pluck('username');
+
+        // dd($forfeit_users);
+
+        $users = User::whereIn('username', $forfeit_users)->get(['username', 'phone']);
+
+        // dd($forfeit_id);
+
+        // $books = RentLog::where('id', $forfeit_id)->get(['book_code']);
+        
+        // Book::whereget();
+
+        $arr = [];
+        foreach ($users as $user) {
+            foreach ($forfeit_id as $id) {
+                if (RentLog::where('id', $id)->where('username', $user->username)->where('return_date', '<', $dateDay->toDateTimeString())->exists()) {
+                    if (!isset($arr[$user->username])) {
+                        $arr[$user->username] = [];
+                    }
+                    $book_code = RentLog::where('id', $id)->value('book_code');
+                    $book = Book::where('book_code', $book_code)->get();
+                    $arr[$user->username][] = $book; // Add the id to the array for this username
+                }
+            }
+        }
+        return response()->json(['message' => $arr], 200);
     }
 }

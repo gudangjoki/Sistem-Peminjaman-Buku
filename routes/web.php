@@ -44,7 +44,7 @@ Route::get('/books/{book_code}', [AdminController::class, "index_update_book"]);
 
 // fitur 8
 Route::post('/buku', [AdminController::class, "book_upload"]);
-Route::put('/books/{book_code}', [AdminController::class, "update_book"]);
+Route::put('/books/update/{book_code}', [AdminController::class, "update_book"]);
 Route::post('/category', [AdminController::class, "add_book_category"]);
 
 //fitur 6, 7, 9
@@ -68,6 +68,9 @@ Route::get('/books/{book_code}', [BookController::class, "book_detail"]);
 // });
 
 Route::get('/dashboard/{section}', [AdminController::class, 'dashboard']);
+Route::get('/dashboard/denda/all', [AdminController::class, 'view_book_warning']);
+Route::put('/update/denda/{username}', [RentLogsController::class, 'update_status_denda']);
+
 Route::get('/dashboard/buku/edit-buku/{book_code}', [AdminController::class, 'index_update_book']);
 Route::get('/dashboard/buku/tambah-buku', [ComponentController::class, 'index_add_book']);
 
