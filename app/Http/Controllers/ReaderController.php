@@ -68,23 +68,52 @@ class ReaderController extends Controller
     }
 
     public function invoice(Request $request, String $book_code) {
+        // Check if the user is authenticated
         $user = $request->session()->get('user');
-            if (!$user) {
-                return response()->json(['error' => 'User not authenticated'], 401);
-            }
-
-        $book = RentLog::where("book_code", "=", $book_code)->where("username", "=", $user)->whereNull("rent_date")->first();
-
-        $data = Book::where("book_code", "=", $book_code)->first();
-
-        $user = User::where("username", "=", $user["username"])->first();
-        
-        $title = $data->title;
-
-        if(empty($book)) {
-            dd($book);
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
         }
-
-        return view('invoice_dashboard', ['book' => $book, 'title' => $title, 'user' => $user]);
-    }
+    
+        // Fetch the book rental log
+        $book = RentLog::where('book_code', $book_code)
+                       ->where('username', $user['username'])
+                       ->first();
+    
+        // Fetch the book details
+        $data = Book::where('book_code', $book_code)->first();
+    
+        // Fetch the user details
+        $userDetails = User::where('username', $user['username'])->first();
+    
+        // Ensure the book details exist
+        if (!$data) {
+            return response()->json(['error' => 'Book not found'], 404);
+        }
+    
+        // Ensure the book rental log exists
+        if (empty($book)) {
+            // Insert a new entry into the RentLog table
+            $log = new RentLog;
+            $log->book_code = $book_code;
+            $log->username = $user['username'];
+            // $log->rent_date = now();
+            // Set other necessary fields if needed, e.g., return_date, actual_return_date
+            $log->save();
+    
+            // Fetch the newly created rent log
+            $book = RentLog::where('book_code', $book_code)
+                           ->where('username', $user['username'])
+                           ->first();
+        }
+    
+        // Prepare the title for the view
+        $title = $data->title;
+    
+        // Return the view with the data
+        return view('invoice_dashboard', [
+            'book' => $book,
+            'title' => $title,
+            'user' => $userDetails
+        ]);
+    }    
 }

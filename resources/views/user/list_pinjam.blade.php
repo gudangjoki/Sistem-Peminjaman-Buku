@@ -1,34 +1,50 @@
- <div class="container">
-    <table class="table">
-        <thead>
-            <tr>
-            <th>#</th>
-            <th>Judul</th>
-            <th>Status</th>
-            <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><img alt="Avatar" class="table-avatar" src="{{ asset('lte/dist/img/avatar.png') }}"></td>
-                <td>Functional-requirements.docx</td>
-                <td>49.8005 kb</td>
-                <td class="text-right py-0 align-middle">
-                    <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i> View</a>
-                    </div>
-                </td>
-            <tr>
-                <td><img alt="Avatar" class="table-avatar " src="{{ asset('lte/dist/img/avatar.png') }}"></td>
-                <td>UAT.pdf</td>
-                <td>28.4883 kb</td>
-                <td class="text-right py-0 align-middle">
-                    <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-info"><i class="fas fa-eye"></i> View</a>
-                    </div>
-                </td>
-            <tr>
-                
-        </tbody>
-    </table>
- </div>
+<table class="table table-striped projects">
+    <thead>
+        <tr>
+            <th style="width: 1%">
+                #
+            </th>
+            <th style="width: 40%">
+                Buku
+            </th>
+            <th style="width: 20%" class="text-center">
+                Kategori
+            </th>
+            <th style="width: 10%" class="text-center">
+                Status
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $groupedBooks = $pinjam->groupBy('book_code');
+        @endphp
+
+        @foreach($groupedBooks as $book_code => $books)
+        <tr>
+            <td>
+                {{$loop->iteration}}
+            </td>
+            <td>
+                <a>
+                    {{ $books->first()->title }}
+                </a>
+                <br/>
+                <small>
+                    {{ $book_code }}
+                </small>
+            </td>
+            <td class="project-state">
+                {{ $books->pluck('category_name')->unique()->implode(', ') }}
+            </td>
+            <td class="project-state">
+                @if ($books->pluck('status')->contains(1))
+                    <span class="badge badge-success">Tersedia</span>
+                @else 
+                    <span class="badge badge-warning">Dipinjam</span>
+                @endif
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>

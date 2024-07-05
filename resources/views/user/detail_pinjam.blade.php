@@ -4,7 +4,7 @@
         <div class="col-12 col-sm-6">
             <h3 class="d-inline-block d-sm-none">{{ $book->title }}</h3>
             <div class="col-12">
-                <img src="{{ asset('lte/dist/img/prod-1.jpg') }}" class="product-image" alt="Product Image">
+                <img src="{{ asset($book->cover) }}" class="product-image" alt="Product Image">
             </div>
         </div>
         <div class="col-12 col-sm-6">
