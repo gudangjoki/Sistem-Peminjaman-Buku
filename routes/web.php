@@ -85,5 +85,7 @@ Route::get('/dashboard/buku/edit-buku/{any}', function () {
 })->where('any', '.*');;
 
 Route::put('/pinjam/{book_code}/user/{username}', [RentLogsController::class, 'update_status_buku']);
+Route::put('/verify/{username}', [AdminController::class, 'admin_verify_member']);
+Route::put('/ban/{username}', [AdminController::class, 'ban_member']);
 
 

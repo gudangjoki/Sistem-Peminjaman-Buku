@@ -125,7 +125,7 @@ class RentLogsController extends Controller
         $rents = RentLog::where('book_code', $book_code)->where('username', $username)->whereNull('rent_date')->first();
 
         if (!$rents) {
-            return redirect()->back()->withErrors("Book not found");
+            return redirect()->back()->withErrors("buku tidak ditemukan");
         }
 
         $rent_date = Carbon::now();

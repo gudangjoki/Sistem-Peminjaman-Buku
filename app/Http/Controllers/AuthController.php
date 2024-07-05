@@ -41,11 +41,11 @@ class AuthController extends Controller
             ]);
     
             if ($admin) {
-                return redirect('/admin/dashboard');
+                return redirect('/dashboard/buku');
             }
     
             if (count($roles) == 1 && in_array(2, $roles)) {
-                return redirect('/books');
+                return redirect('/dashboard/home');
             }
     
             $roles_tb = Role::select('id', 'name')->where('id', '>=', 3)->get();

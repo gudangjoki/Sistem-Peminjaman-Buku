@@ -439,4 +439,28 @@ class AdminController extends Controller
         }
         return response()->json(['message' => $arr], 200);
     }
+
+    public function admin_verify_member(string $username) {
+        $user = User::where('username', $username)->first();
+
+        if(!$user) {
+            return redirect()->back()->withErrors('user tidak ditemukan');
+        }
+        
+        $user->update(['status' => 1]);
+
+        return redirect()->back()->withErrors('user berhasil diverify');
+    }
+
+    public function ban_member(string $username) {
+        $user = User::where('username', $username)->first();
+
+        if(!$user) {
+            return redirect()->back()->withErrors('user tidak ditemukan');
+        }
+
+        $user->update(['status'=> 0]);
+
+        return redirect()->back()->withErrors('user berhasil diban');
+    }
 }

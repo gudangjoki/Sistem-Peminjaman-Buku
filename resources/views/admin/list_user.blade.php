@@ -16,6 +16,9 @@
             <th style="width: 15%">
                 Status 
             </th>
+            <th style="width: 15%">
+                Action 
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -40,7 +43,28 @@
                     <p>Non-Aktif</p>
                 @endif
             </td>
+            <td>
+            <form action="/verify/{{ $user->username }}" method="POST">
+            @csrf
+            @method("PUT")
+                <button type="submit" class="btn btn-warning btn-sm">
+                    <i class="fas fa-pencil-alt">
+                    </i>
+                    Verify
+                </button>
+            </form>
+            <form action="/ban/{{ $user->username }}" method="POST">
+            @csrf
+            @method("PUT")
+                <button type="submit" class="btn btn-warning btn-sm">
+                    <i class="fas fa-pencil-alt">
+                    </i>
+                    Ban
+                </button>
+            </form>
+            </td>
         </tr>
+
         @endforeach
     </tbody>
 </table>

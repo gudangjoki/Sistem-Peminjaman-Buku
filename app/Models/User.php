@@ -11,6 +11,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $primaryKey = 'username';
+
     public $incrementing = false;
 
     public $timestamps = false;
@@ -27,7 +29,8 @@ class User extends Authenticatable
         'username',
         'password',
         'phone',
-        'address'
+        'address',
+        'status'
     ];
 
     protected $hidden = [
