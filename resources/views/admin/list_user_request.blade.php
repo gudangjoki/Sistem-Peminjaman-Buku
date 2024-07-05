@@ -15,15 +15,16 @@
         </tr>
     </thead>
     <tbody>
+        @foreach ($reqs as $req)
         <tr>
             <td>
-                #
+                {{$loop->iteration}}
             </td>
             <td>
-                wawan
+                {{$req->username}}
             </td>
             <td class="project-state">
-                <span class="badge badge-success">Not Aktif</span>
+                <span class="badge badge-warning">Not Aktif</span>
             </td>
             <td class="project-actions text-right">
                 <a class="btn btn-warning btn-sm" href="#">
@@ -33,5 +34,6 @@
                 </a>
             </td>
         </tr>
+        @endforeach
     </tbody>
 </table>

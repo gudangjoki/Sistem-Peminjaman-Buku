@@ -16,25 +16,31 @@
         </tr>
     </thead>
     <tbody>
+        @foreach($pinjam as $pjm)
         <tr>
             <td>
-                #
+                {{$loop->iteration}}
             </td>
             <td>
                 <a>
-                    AdminLTE v3
+                    {{ $pjm->title }}
                 </a>
                 <br/>
                 <small>
-                    kode
+                    {{ $pjm->book_code }}
                 </small>
             </td>
             <td class="project-state">
-                Fitnes
+                {{ $pjm->category_name }}
             </td>
             <td class="project-state">
-                <span class="badge badge-success">Success</span>
+                @if ($pjm->status == 1)
+                    <span class="badge badge-success">Tersedia</span>
+                @else 
+                    <span class="badge badge-warning">Dipinjam</span>
+                @endif
             </td>
         </tr>
+        @endforeach
     </tbody>
 </table>

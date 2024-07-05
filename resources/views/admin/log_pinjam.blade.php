@@ -14,7 +14,7 @@
                 Berlaku
             </th>
             <th style="width: 15%">
-                Selesai 
+                Sampai 
             </th>
             <th style="width: 15%">
                 Tanggal Dikembali
@@ -22,25 +22,31 @@
         </tr>
     </thead>
     <tbody>
+        @foreach ($logs as $log)
         <tr>
             <td>
-                #
+                {{$loop->iteration}}
             </td>
             <td>
-               1
+                {{$log->username}}
             </td>
             <td>
-                1
+                {{$log->book_code}}
             </td>
             <td>
-                1
+                {{$log->rent_date}}
             </td>
             <td>
-                1
+                {{$log->return_date}}
             </td>
             <td>
-                1
+                @if(is_null($log->actual_return_date))
+                    <span class="badge badge-danger">Belum Dikembalikan</span>
+                @else
+                    {{$log->actual_return_date}}
+                @endif
             </td>
         </tr>
+        @endforeach
     </tbody>
 </table>

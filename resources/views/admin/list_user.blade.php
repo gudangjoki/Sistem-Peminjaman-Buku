@@ -19,22 +19,28 @@
         </tr>
     </thead>
     <tbody>
+        @foreach ($users as $user)
         <tr>
             <td>
-                #
+                {{ $loop->iteration }}
             </td>
             <td>
-               1
+                {{ $user->username }}
             </td>
             <td>
-                1
+                {{ $user->phone }}
             </td>
             <td>
-                1
+                {{ $user->address }}
             </td>
             <td>
-                1
+                @if ($user->status == 1)
+                    <p>Aktif</p>
+                @else
+                    <p>Non-Aktif</p>
+                @endif
             </td>
         </tr>
+        @endforeach
     </tbody>
 </table>
