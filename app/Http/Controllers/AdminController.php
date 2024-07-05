@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
@@ -52,39 +53,113 @@ class AdminController extends Controller
         $uuid = Str::uuid()->toString();
         $imageName = $uuid.'.'.$request->cover->extension();
         $request->cover->move(public_path('images'), $imageName);
+
+        $title = $validate['title'];
         
         $book = new Book;
-        $book->title = $validate['title'];
+        $book->title = $title;
         $book->status = $validate['status'];
+        $book->slug = Str::slug(strtolower($title));
         $book->cover = 'images/'.$imageName;
         $book->description = $validate['description'];
 
+        $book->save();
+
         $book->categories()->attach($request->category);
         
-        $book->save();
+
 
         return redirect('book-table')->with('status', 'The book has been added');
     }
 
-    public function index_update_book(string $book_code) {
-        $book = Book::findOrFail($book_code);
+    public function index_update_book(Request $request, string $book_code) {
+        $book = Book::where('book_code', '=', $book_code)->first();
         // Category::where('book_code', '=', $book_code)->first();
 
-        $book_data = $book->categories()->get();
-
-        if ( !$book || !$book_data ) {
+        if ( !$book ) {
             // redirect ke halaman create atau update buku 
-            return redirect("")->withErrors('book not found in database');
+            return redirect("http://127.0.0.1:8000/dashboard/buku")->withErrors('book not found in database');
         }
 
-        return view("update.book", ['book' => $book_data]);
+        $category = $book->categories()->get();
+
+        if ( !$category ) {
+            // redirect ke halaman create atau update buku 
+            return redirect("http://127.0.0.1:8000/dashboard/buku/edit-book/" . $book_code)->withErrors('categories not found in database');
+        }
+
+        $url = $request->fullUrl();
+
+        $parsed_path_url = parse_url($url)['path'];
+
+        $segments = explode('/', trim($parsed_path_url, '/'));
+
+        $result = [];
+
+        foreach ($segments as $index => $segment) {
+            $result['segment' . ($index + 1)] = $segment;
+        }
+
+        // dd($book->book_code);
+
+        $categories = Category::all();
+
+        $books = [];
+
+        return view("admin.dashboard", ['book' => $book, 'result' => $result, 'books' => $books, 'category' => $category, 'categories' => $categories]);
     }
 
-    # fungsi untuk 
-    public function update_book(Request $request, string $book_code) {
-        $result = Book::where("book_code", "=", $book_code)->first();
+    public function book_upload(Request $request) {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            // 'status' => 'required|boolean',
+            'cover' => 'image|mimes:jpeg,png,jpg|max:2048',
+            // 'book_file' => 'file|mimes:pdf,doc,docx,epub|max:10240'
+        ]);
+    
+        $coverFilePath = null;
+        $bookFilePath = null;
+    
+        if ($request->hasFile('cover')) {
+            $cover = $request->file('cover');
+            $coverFilePath = 'covers/' . time() . '_' . $cover->getClientOriginalName();
+            $cover->move(public_path('covers'), $coverFilePath);
+        }
 
-        if ( $result == null ) {
+        $title = $validated['title'];
+
+        $uuid = Str::uuid()->toString();
+    
+        $book = new Book;
+        $book->book_code = $uuid;
+        $book->title = $title;
+        $book->slug = Str::slug(strtolower($title));
+        $book->description = $validated['description'];
+        $book->status = 1;
+        $book->cover = $coverFilePath;
+        // $book->book_file = $bookFilePath;
+
+        $book->save();
+
+        if ($request->has('category')) {
+            // dd($request->category);
+            DB::table('book_categories')->insert([
+                'book_code' => $book->book_code,
+                'category_id' => $request->category
+            ]);
+        }
+
+
+
+    
+        return response()->json(['message' => 'Book uploaded successfully'], 200);
+    }    
+
+    public function update_book(Request $request, string $book_code) {
+        $book = Book::where("book_code", "=", $book_code)->first();
+
+        if ( $book == null ) {
             return redirect()->withErrors("book not found in database");
         }
 
@@ -96,20 +171,31 @@ class AdminController extends Controller
             'cover' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
+        if ($request->hasFile('cover')) {
+            $cover = $request->file('cover');
+            $filePath = 'covers/';
 
-
-        $book = Book::find(1);
+            // ganti nama
+            $fileName = time() . '_' . $cover->getClientOriginalName();
+            // pindahkan file gambar
+            $cover->move(public_path($filePath), $fileName);
+    
+            // Set the book cover path
+            $book->cover = $filePath . $fileName;
+        }
 
         $book->title = $validated['title'];
-        $book->cover = $validated['cover'];
         $book->description = $validated['description'];
-        $book->status = $validated['status'];
+        $book->status = 1;
 
-        $book->categories()->attach($request->category);
+        // $book->categories()->attach($request->category);
+        if ($request->has('category')) {
+            $book->categories()->sync($request->category);
+        }
 
         $book->save();
 
-        return redirect();
+        return redirect("/");
     }
 
     public function book_list_rented() {
@@ -126,6 +212,7 @@ class AdminController extends Controller
         User::all();
     }
     public function dashboard(Request $request, $section) {
+
         error_log('knt: ' . $request->fullUrl());
         $url = $request->fullUrl();
 
@@ -138,6 +225,38 @@ class AdminController extends Controller
         foreach ($segments as $index => $segment) {
             $result['segment' . ($index + 1)] = $segment;
         }
-        return view('admin/dashboard',['result' => $result, 'section' => $section]);
+        
+        $books = [];
+
+        if (in_array('buku', $result)) {
+
+            // $categories = Category::all();
+
+            $category_id = $request->query('category');
+            $search = $request->query('search');
+    
+            error_log($category_id);
+    
+            if ($category_id && empty($search)) {
+                $books = Book::leftJoin('book_categories', 'books.book_code', '=', 'book_categories.book_code')
+                ->where('book_categories.category_id', $category_id)
+                ->get();
+    
+                error_log($books);
+    
+            } else if (empty($category_id) && $search) {
+                $books = Book::where('title', 'like', '%' . $search . '%')->get();
+            }
+            
+            else if ($search && $category_id){
+                $books = Book::leftJoin('book_categories', 'books.book_code', '=', 'book_categories.book_code')->where('book_categories.category_id', $category_id)->where('title', 'like', '%' . $search . '%')->get();
+            }   
+    
+            else {
+                $books = Book::all();
+            }
+        }
+
+        return view('admin/dashboard', ['result' => $result, 'section' => $section, 'books' => $books]);
     }
 }

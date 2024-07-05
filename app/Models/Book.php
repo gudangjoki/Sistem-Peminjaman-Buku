@@ -11,21 +11,22 @@ class Book extends Model
 
     public $incrementing = false;
 
-    public $timestamp = false;
+    public $timestamps = false;
     
     protected $fillable = [
         'book_code',
         'title',
+        'slug',
         'status',
         'cover',
         'description',
     ];
 
     public function users() {
-        return $this->belongsToMany(User::class, 'rent_logs', 'book_id', 'username');
+        return $this->belongsToMany(User::class, 'rent_logs', 'book_code', 'username');
     }
 
     public function categories() {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class, 'book_categories', 'book_code', 'category_id');
     }
 }

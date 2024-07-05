@@ -45,7 +45,7 @@
                     </div>
                     <!-- /.content-wrapper -->
                     @break
-                @case(in_array('buku', $result)  )
+                @case(in_array('buku', $result) && !in_array('tambah-buku', $result) && !in_array('edit-buku', $result) )
                     <div class="content-wrapper">
                         <!-- Content Header (Page header) -->
                         <div class="content-header">
@@ -57,9 +57,11 @@
 
                         <!-- Main content -->
                         <section class="content">
+
                             <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
                                 @include('admin/list_book')     
                             </div>
+
                             <!--/. container-fluid -->
                         </section>
                         <!-- /.content -->
@@ -191,6 +193,48 @@
                         <!-- /.content -->
                     </div>
                     <!-- /.content-wrapper -->
+                    @break
+                
+                @case(in_array('tambah-buku', $result))
+                <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>Tambah Buku</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/create_book')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    @break
+
+                @case(in_array('edit-buku', $result) && in_array('buku', $result))
+                <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <h1>Tambah Buku</h1>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
+
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/edit_book')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
                     @break
                 @default
                     <div>Section not found.</div>

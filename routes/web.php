@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\ReaderController;
 use App\Http\Controllers\RentLogsController;
 use Illuminate\Support\Facades\Route;
@@ -42,7 +43,7 @@ Route::post('/register_acc', [AuthController::class, 'register']);
 Route::get('/books/{book_code}', [AdminController::class, "index_update_book"]);
 
 // fitur 8
-// Route::post('/book', [AdminController::class, "book_upload"]);
+Route::post('/buku', [AdminController::class, "book_upload"]);
 Route::put('/books/{book_code}', [AdminController::class, "update_book"]);
 Route::post('/category', [AdminController::class, "add_book_category"]);
 
@@ -65,6 +66,17 @@ Route::get('/books/{book_code}', [BookController::class, "book_detail"]);
 // Route::get('*', function() {
 //     return view("not_found");
 // });
+
 Route::get('/dashboard/{section}', [AdminController::class, 'dashboard']);
+Route::get('/dashboard/buku/edit-buku/{book_code}', [AdminController::class, 'index_update_book']);
+Route::get('/dashboard/buku/tambah-buku', [ComponentController::class, 'index_add_book']);
+
+Route::get('/dashboard/buku/{any}', function () {
+    return redirect('/dashboard/buku');
+})->where('any', '.*');;
+
+Route::get('/dashboard/buku/edit-buku/{any}', function () {
+    return redirect('/dashboard/buku');
+})->where('any', '.*');;
 
 
