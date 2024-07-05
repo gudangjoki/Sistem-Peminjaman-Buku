@@ -21,29 +21,39 @@
         </tr>
     </thead>
     <tbody>
+        @foreach ($confirm as $conf)
+        <form action="/pinjam/{{ $conf->book_code }}/user/{{ $conf->username }}" method="POST">
+            @csrf
+            @method("PUT")
         <tr>
             <td>
-                #
+                {{$loop->iteration}}
             </td>
             <td>
-                wedz
+                {{$conf->username}}
             </td>
             <td>
-                jud
+                {{$conf->book_code}}
             </td>
             <td>
-                judul
+                {{$conf->title}}
             </td>
             <td class="project-state">
-                <span class="badge badge-success">Success</span>
+                @if ($conf->status == 1)
+                    <span class="badge badge-success">Tersedia</span>
+                @else 
+                    <span class="badge badge-warning">Dipinjam</span>
+                @endif
             </td>
             <td class="project-actions text-right">
-                <a class="btn btn-warning btn-sm" href="#">
+                <button type="submit" class="btn btn-warning btn-sm">
                     <i class="fas fa-trash">
                     </i>
                     Konfirmasi
-                </a>
+                </button>
             </td>
         </tr>
+        </form>
+        @endforeach
     </tbody>
 </table>

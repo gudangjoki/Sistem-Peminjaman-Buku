@@ -120,5 +120,26 @@ class RentLogsController extends Controller
             Book::where('book_code', $book_code)->update(['status' => 1]);
         }
     }
+
+    public function update_status_buku(string $book_code, string $username) {
+        $rents = RentLog::where('book_code', $book_code)->where('username', $username)->whereNull('rent_date')->first();
+
+        if (!$rents) {
+            return redirect()->back()->withErrors("Book not found");
+        }
+
+        $rent_date = Carbon::now();
+
+        $return_date = $rent_date->copy()->addDays(3);
+
+        $rents->update([
+            'rent_date'=> $rent_date,
+            'return_date'=> $return_date
+        ]);
+
+        Book::where('book_code', $book_code)->update(['status' => 1]);
+
+        return redirect()->back()->with('status', 'status buku sukses diupdate');
+    }
     
 }

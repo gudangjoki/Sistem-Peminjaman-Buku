@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
+    
+    protected $table = 'categories';
 
     public $incrementing = false;
-    public $timestamp = false;
+    public $timestamps = false;
 
     public function book() {
         return $this->hasMany(Book::class);

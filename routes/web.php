@@ -66,6 +66,8 @@ Route::get('/books/{book_code}', [BookController::class, "book_detail"]);
 // Route::get('*', function() {
 //     return view("not_found");
 // });
+Route::post('/dashboard/add-category', [AdminController::class, 'add_category'])->name('add.category');
+Route::post('/edit-category/{category_id}', [AdminController::class, 'edit_category'])->name('edit.category');
 
 Route::get('/dashboard/{section}', [AdminController::class, 'dashboard']);
 Route::get('/dashboard/denda/all', [AdminController::class, 'view_book_warning']);
@@ -81,5 +83,7 @@ Route::get('/dashboard/buku/{any}', function () {
 Route::get('/dashboard/buku/edit-buku/{any}', function () {
     return redirect('/dashboard/buku');
 })->where('any', '.*');;
+
+Route::put('/pinjam/{book_code}/user/{username}', [RentLogsController::class, 'update_status_buku']);
 
 

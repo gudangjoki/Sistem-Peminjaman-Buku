@@ -9,7 +9,11 @@ class Book extends Model
 {
     use HasFactory;
 
+    protected $table = 'books';
+
     public $incrementing = false;
+    protected $keyType = 'string';
+    
     public $timestamps = false;
     protected $primaryKey = 'book_code';
     

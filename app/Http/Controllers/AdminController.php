@@ -151,9 +151,6 @@ class AdminController extends Controller
                 'category_id' => $request->category
             ]);
         }
-
-
-
     
         return response()->json(['message' => 'Book uploaded successfully'], 200);
     }    
@@ -224,6 +221,7 @@ class AdminController extends Controller
     //     User::all();
     // }
 
+
     public function dashboard(Request $request, $section) {
         error_log('knt: ' . $request->fullUrl());
         $url = $request->fullUrl();
@@ -234,7 +232,13 @@ class AdminController extends Controller
         $segments = explode('/', trim($parsed_path_url, '/'));
     
         $result = [];
-    
+            $pinjam = [];
+        $users = [];
+        $logs = [];
+        $categories = [];
+        $confirm = [];
+        $reqs = [];
+
         foreach ($segments as $index => $segment) {
             $result['segment' . ($index + 1)] = $segment;
         }
@@ -253,15 +257,50 @@ class AdminController extends Controller
                     ->get();
             } else if (empty($category_id) && $search) {
                 $books = Book::where('title', 'like', '%' . $search . '%')->get();
-            } else if ($search && $category_id) {
-                $books = Book::leftJoin('book_categories', 'books.book_code', '=', 'book_categories.book_code')
-                    ->where('book_categories.category_id', $category_id)
-                    ->where('title', 'like', '%' . $search . '%')
-                    ->get();
-            } else {
+            }
+            
+            else if ($search && $category_id){
+                $books = Book::leftJoin('book_categories', 'books.book_code', '=', 'book_categories.book_code')->where('book_categories.category_id', $category_id)->where('title', 'like', '%' . $search . '%')->get();
+            }   
+    
+            else {
                 $books = Book::all();
             }
+        }else if(in_array('pinjam', $result)){
+            $pinjam = DB::table('book_categories')
+            ->join('books', 'book_categories.book_code', '=', 'books.book_code')
+            ->join('categories', 'book_categories.category_id', '=', 'categories.id')
+            ->select('books.book_code', 'books.title', 'categories.name as category_name', 'books.status')
+            ->where('books.status', 0)
+            ->get();
+    
+            // dd($pinjam);
+            // return view('admin.dashboard', ['books' => $books]);
+        }else if(in_array('user', $result)){
+            $users = DB::table('users') ->get();
+        }else if(in_array('log', $result)){
+            $logs = DB::table('rent_logs') ->get();
+        }else if(in_array('kategori', $result)){
+            $categories = DB::table('categories') ->get();
+        }else if(in_array('confirm', $result)){
+            $confirm = DB::table('rent_logs')
+            ->join('books', 'rent_logs.book_code', '=', 'books.book_code')
+            ->select('rent_logs.*', 'books.*')
+            ->whereNull('rent_logs.rent_date')
+            ->orWhereNull('rent_logs.return_date')
+            ->get();
+        }else if(in_array('req', $result)){
+            $reqs = DB::table('users')->where('status', 0)->get();
         }
+            // } else if ($search && $category_id) {
+            //     $books = Book::leftJoin('book_categories', 'books.book_code', '=', 'book_categories.book_code')
+            //         ->where('book_categories.category_id', $category_id)
+            //         ->where('title', 'like', '%' . $search . '%')
+            //         ->get();
+            // } else {
+            //     $books = Book::all();
+            // }
+        // }
     
         if (in_array('denda', $result)) {
             $currTimeSec = Carbon::now()->toDateTimeString();
@@ -319,9 +358,39 @@ class AdminController extends Controller
 
 
         }
-    
+        return view('admin/dashboard', ['result' => $result, 'section' => $section, 'books' => $books, 'pinjam' => $pinjam, 'users' => $users, 'logs' => $logs, 'categories'=> $categories, 'confirm' => $confirm, 'reqs' => $reqs]);
         return view('admin/dashboard', ['result' => $result, 'section' => $section, 'books' => $books, 'arrs' => $arr, 'users' => $users]);
     }
+    public function add_category(Request $request)
+    {
+        $validated = $request->validate([
+            'category' => 'required|string|max:255|unique:categories,name'
+        ]);
+    
+        $category = new Category;
+        $category->name = $validated['category'];
+        $category->save();
+    
+        return redirect('../dashboard/kategori')->with('status', 'Category added successfully');
+    }
+    public function edit_category(Request $request, $category_id)
+    {
+        $validated = $request->validate([
+            'category' => 'required|string|max:255|unique:categories,name,' . $category_id
+        ]);
+
+        $category = Category::find($category_id);
+        
+        if (!$category) {
+            return redirect('/')->withErrors('Category not found');
+        }
+
+        $category->name = $validated['category'];
+        $category->save();
+
+        return redirect('../dashboard/kategori')->with('status', 'Category updated successfully');
+    }
+    
     
     public function view_book_warning() {
         $currTimeSec = Carbon::now()->toDateTimeString();

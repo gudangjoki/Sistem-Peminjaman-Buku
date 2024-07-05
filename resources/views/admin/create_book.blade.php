@@ -40,11 +40,8 @@
                             <label for="exampleInputFile">File input</label>
                             <div class="input-group">
                                 <div class="custom-file">
-                                <input type="file" name="cover" class="custom-file-input" id="exampleInputFile">
-                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                </div>
-                                <div class="input-group-append">
-                                <span class="input-group-text">Upload</span>
+                                    <input type="file" name="cover" class="custom-file-input" id="exampleInputFile">
+                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                 </div>
                             </div>
                         </div>
@@ -60,7 +57,9 @@
                     </div>
                 </div>
                 <div class="row" >
-                    <button type="submit" class="col text-right">Submit</button>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary float-right">Submit</button>
+                    </div>
                 </div>
             </form>
         </div>

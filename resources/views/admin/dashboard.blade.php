@@ -17,6 +17,13 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('lte/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <style>
+        .fixed-size-img {
+            width: 100%; /* atau set ukuran spesifik seperti width: 150px; height: 200px; */
+            height: auto; /* Sesuaikan ukuran sesuai aspek rasio gambar */
+            object-fit: cover; /* Menghindari gambar terdistorsi */
+        }
+    </style>
 </head>
 
 <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed sidebar-closed sidebar-collapse sidebar-mini">
@@ -36,33 +43,61 @@
             </div>
             <!-- /.content-header -->
 
-            <!-- Main content -->
-            <section class="content">
-                <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                    @include('admin/log_pinjam')
-                </div>
-                <!--/. container-fluid -->
-            </section>
-            <!-- /.content -->
-        </div>
-        <!-- /.content-wrapper -->
-        @break
-        @case(in_array('buku', $result) && !in_array('tambah-buku', $result) && !in_array('edit-buku', $result) )
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                    <h1>List Buku</h1>
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                @include('admin/log_pinjam')
+                            </div>
+                            <!--/. container-fluid -->
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- /.content-wrapper -->
+                    @break
+                @case(in_array('buku', $result) && !in_array('tambah-buku', $result) && !in_array('edit-buku', $result) )
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <div class="content-header">
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <div class="row">
+                                    <div class="col-md-2"><h1>List Buku</h1></div>
+                                    <div class="col-md-8">
+                                        <div class="input-group input-group-md mb-3">
+                                            <div class="input-group-prepend mr-5">
+                                                <button type="button" class="btn btn-default px-4 dropdown-toggle" data-toggle="dropdown">
+                                                    Kategori
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li class="dropdown-item"><a href="#">Action</a></li>
+                                                    <li class="dropdown-item"><a href="#">Another action</a></li>
+                                                    <li class="dropdown-item"><a href="#">Something else here</a></li>
+                                                    <li class="dropdown-divider"></li>
+                                                    <li class="dropdown-item"><a href="#">Separated link</a></li>
+                                                </ul>
+                                            </div>
+                                            <!-- /btn-group -->
+                                            @include('component.search')
+                                        </div>
+                                        <!-- /input-group -->
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="buku/tambah-buku" class="btn btn-md btn-success float-right px-4">
+                                            <i class="fas fa-edit"></i> Tambah
+                                        </a>
+                                    </div>
+                                </div>
+                            </div><!-- /.container-fluid -->
+                        </div>
+                        <!-- /.content-header -->
 
             <!-- Main content -->
             <section class="content">
 
-                <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                    @include('admin/list_book')
-                </div>
+                            <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                                <div class="row mt-3 pt-3">
+                                    @include('admin.list_book')     
+                                </div>
+                            </div>
 
                 <!--/. container-fluid -->
             </section>
@@ -138,7 +173,16 @@
             <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                    <h1>List Kategori</h1>
+                                <div class="row">
+                                    <div class="col-md-8">
+                            <h1>List Kategori</h1>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="button" class="btn btn-success float-right px-3" data-toggle="modal" data-target="#modal-default">
+                                            Tambah
+                                        </button>
+                                    </div>
+                                </div>
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
