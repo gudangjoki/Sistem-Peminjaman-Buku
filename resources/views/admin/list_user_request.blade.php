@@ -27,11 +27,15 @@
                 <span class="badge badge-warning">Not Aktif</span>
             </td>
             <td class="project-actions text-right">
-                <a class="btn btn-warning btn-sm" href="#">
+                <form action="/verify/{{$req->username}}" method="POST">
+                    @csrf
+                    @method("PUT")
+                <button class="btn btn-warning btn-sm" href="#">
                     <i class="fas fa-folder">
                     </i>
                     Konfirmasi
-                </a>
+                </button>
+                </form>
             </td>
         </tr>
         @endforeach
