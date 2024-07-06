@@ -20,10 +20,15 @@ class AuthController extends Controller
     
         if ($user && Hash::check($request->password, $user->password)) {
             $username = $user->username;
-            $role_user = User::where('username', '=', $username)->select('role_id')->first();
+            $role_user = User::where('username', '=', $username)->whereNotNull('status')->select('role_id', 'status')->first();
     
             if (!$role_user) {
-                return redirect('login')->withErrors(['username' => 'No role assigned to this username']);
+                return redirect()->back()->withErrors(['error' => 'Your account has not verified yet, please contact our admin to verify']);
+            }
+            
+            if ($role_user->status == 0) {
+                // dd($role_user->status);
+                return redirect()->back()->withErrors(['error' => 'Akun kamu sudah dibanned oleh admin karena belum membayar denda buku']);
             }
     
             $admin = false;
@@ -72,19 +77,28 @@ class AuthController extends Controller
         // DB::beginTransaction();
         
         try {
+
             $validate = $request->validate([
                 // 'name' => 'required|string|max:255',
                 'username' => 'required|string|max:255|unique:users',
                 'password' => 'required|string',
-                'phone' => 'required|integer|min:8|max:20',
+                'phone' => 'required|string',
                 'address' => 'required|string|max:100',
             ]);
-        
+
+            $phone = $validate['phone'];
+
+            if (substr($phone, 0, 1) == '0') {
+                $phone = substr($phone, 1);
+            }
+
+            $phone = intval($phone);
+
             $new_user = new User;
             // $new_user->name = $validate['name'];
             $new_user->username = $validate['username'];
             $new_user->password = bcrypt($validate['password']);
-            $new_user->phone = $validate['phone'];
+            $new_user->phone =  $phone;
             $new_user->address = $validate['address'];
             $new_user->role_id = 1;
             $new_user->save();
@@ -102,7 +116,7 @@ class AuthController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Failed to register user', 'message' => $e->getMessage()], 500);
+            return redirect()->back()->withErrors(['error' => 'Failed to register user', 'message' => $e->getMessage()]);
         }
 
     

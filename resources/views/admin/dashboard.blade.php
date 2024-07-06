@@ -323,6 +323,42 @@
     <!-- ChartJS -->
     <script src="{{ asset('lte/plugins/chart.js/Chart.min.js') }}"></script>
     <script>
+
+function status() {
+        let url = `/dashboard/denda/status/all`;
+        console.log(url);
+        fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data['wawan']);
+                let statusElements = document.querySelectorAll(".status-denda");
+                statusElements.forEach(element => {
+                    let name = element.getAttribute('name');
+                    // console.log(name);
+                    if (data[name] !== undefined) {
+                        if (data[name] > 0) {
+                            console.log(element);
+                            element.classList.add('badge-warning');
+                            element.textContent = "Perlu Bayar Denda";
+                        } else {
+                            element.classList.add('badge-success');
+                            element.textContent = "Belum Denda";
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            status();
+        });
+
         function showModal(username) {
             let url = `/dashboard/denda/all`;
             console.log(url);
@@ -338,18 +374,21 @@
                     let modal = $('#modal-default-' + username);
                     let modalBody = modal.find('.modal-body');
                     modalBody.empty();
-
+                        // if (data.message.indexOf(username) === -1) {
+                        //     document.querySelector(".status-denda").value = "Sudah Bayar"
+                        // }
                     if (data.message[username]) {
                         let values = data.message[username];
                         localStorage.setItem(username, JSON.stringify(values));
                         values.forEach(function(value) {
                             console.log(value);
+    
                             value.map(function(val) {
                                 modalBody.append('<div classname="border-3">');
                                 modalBody.append('<p><strong>Title:</strong> ' + val.title + '</p>');
                                 modalBody.append('<p><strong>Book Code:</strong> ' + val.book_code + '</p>');
-                                modalBody.append('<p><strong>Description:</strong> ' + val.description + '</p>');
-                                modalBody.append('<img src="' + val.cover + '" alt="Book Cover" style="width:100px;height:auto;">');
+                                // modalBody.append('<p><strong>Description:</strong> ' + val.description + '</p>');
+                                // modalBody.append('<img src="' + val.cover + '" alt="Book Cover" style="width:100px;height:auto;">');
                                 modalBody.append('<hr>');
                                 modalBody.append('<hr>');
                                 modalBody.append('<div>');

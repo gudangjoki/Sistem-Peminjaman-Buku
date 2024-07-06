@@ -111,8 +111,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                         <div class="col-sm-4 invoice-col">
                                             <b>Invoice #{{$book->id}}</b><br>
                                             <br>
-                                            <b>Tanggal Dipinjam:</b>{{$book->rent_date}}<br>
-                                            <b>Tanggal Dikembalikan:</b>{{$book->return_date}}<br>
+                                            <!-- <b>Tanggal Dipinjam:</b>{{$book->rent_date}}<br>
+                                            <b>Tanggal Dikembalikan:</b>{{$book->return_date}}<br> -->
                                         </div>
                                         <!-- /.col -->
                                     </div>

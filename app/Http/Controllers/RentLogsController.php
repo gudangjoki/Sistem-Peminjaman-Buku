@@ -137,9 +137,45 @@ class RentLogsController extends Controller
             'return_date'=> $return_date
         ]);
 
-        Book::where('book_code', $book_code)->update(['status' => 1]);
+        Book::where('book_code', $book_code)->update(['status' => 0]);
 
         return redirect()->back()->with('status', 'status buku sukses diupdate');
     }
     
+    public function bool_status_denda() {
+        $logs = RentLog::all();
+    
+        $usersWithRentDate = RentLog::whereNotNull('rent_date')
+                                    ->distinct()
+                                    ->pluck('username')
+                                    ->toArray();
+    
+        $status_arr = [];
+        foreach ($logs as $log) {
+            if (in_array($log->username, $usersWithRentDate)) {
+                $status_arr[] = ['id' => $log->id, 'status' => 'warning'];
+            } else {
+                $status_arr[] = ['id' => $log->id, 'status' => 'clear'];
+            }
+        }
+
+        $count_user = [];
+        foreach ($logs as $log) {
+            $count = RentLog::where('username', $log->username)
+            ->whereNotNull('rent_date')
+            ->whereNull('actual_return_date')
+            ->where('return_date', '<', Carbon::now()->toDateTimeString())
+            ->count();
+
+            $count_user[$log->username] = $count; 
+        }
+
+        // dd($count_user);
+
+        // foreach ($status_arr as $statuss) {
+
+        // }
+    
+        return $count_user;
+    }
 }

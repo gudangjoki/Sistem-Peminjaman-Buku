@@ -80,14 +80,14 @@ class AdminController extends Controller
 
         if ( !$book ) {
             // redirect ke halaman create atau update buku 
-            return redirect("http://127.0.0.1:8000/dashboard/buku")->withErrors('book not found in database');
+            return redirect("../../dashboard/buku")->withErrors('book not found in database');
         }
 
         $category = $book->categories()->get();
 
         if ( !$category ) {
             // redirect ke halaman create atau update buku 
-            return redirect("http://127.0.0.1:8000/dashboard/buku/edit-book/" . $book_code)->withErrors('categories not found in database');
+            return redirect("../../dashboard/buku/edit-book/" . $book_code)->withErrors('categories not found in database');
         }
 
         $url = $request->fullUrl();
@@ -277,7 +277,7 @@ class AdminController extends Controller
             // dd($pinjam);
             // return view('admin.dashboard', ['books' => $books]);
         }else if(in_array('user', $result)){
-            $users = DB::table('users') ->get();
+            $users = DB::table('users')->where('role_id', 2)->whereNot('status', null)->get();
         }else if(in_array('log', $result)){
             $logs = DB::table('rent_logs')->get();
         }else if(in_array('kategori', $result)){
@@ -288,9 +288,10 @@ class AdminController extends Controller
             ->select('rent_logs.*', 'books.*')
             ->whereNull('rent_logs.rent_date')
             ->orWhereNull('rent_logs.return_date')
+            ->where('status', 1)
             ->get();
         }else if(in_array('req', $result)){
-            $reqs = DB::table('users')->where('status', 0)->get();
+            $reqs = DB::table('users')->where('status', null)->get();
         }
             // } else if ($search && $category_id) {
             //     $books = Book::leftJoin('book_categories', 'books.book_code', '=', 'book_categories.book_code')
@@ -303,67 +304,82 @@ class AdminController extends Controller
         // }
     
         if (in_array('denda', $result)) {
-            $currTimeSec = Carbon::now()->toDateTimeString();
-
-            $dateDay = Carbon::now()->addDays(3);
-
-            // dd($currTimeSec);
-
-            $logs = RentLog::whereNull('actual_return_date')->get(['id', 'return_date']);
-
-            $forfeit_id = [];
-            foreach ($logs as $log) {
-                if ($log->return_date < $dateDay->toDateTimeString()) {
-                    $forfeit_id[] = $log->id;
+            $currTimeSec = Carbon::now()->timestamp;
+        
+            $dateDay = Carbon::now()->addDays(3)->timestamp;
+        
+            $distinctUsernames = RentLog::whereNull('actual_return_date')
+                ->distinct()
+                ->pluck('username');
+        
+            $forfeitIds = [];
+        
+            foreach ($distinctUsernames as $username) {
+                $logs = RentLog::where('username', $username)
+                    ->whereNull('actual_return_date')
+                    ->get(['id']);
+                
+                foreach ($logs as $log) {
+                    $forfeitIds[] = $log->id;
                 }
             }
-
-            // dd($forfeit_id);
-
-            $forfeit_users = RentLog::whereIn('id', $forfeit_id)
-            ->distinct('username')
-            ->pluck('username');
-
-            // dd($forfeit_users);
-
-            $users = User::whereIn('username', $forfeit_users)->get(['username', 'phone']);
-
-            // dd($forfeit_id);
-
-            // $books = RentLog::where('id', $forfeit_id)->get(['book_code']);
+        
+            $users = RentLog::leftJoin('users', 'rent_logs.username', '=', 'users.username')
+                ->whereIn('users.username', $distinctUsernames)
+                ->whereNotNull('rent_logs.rent_date')
+                ->whereNotNull('rent_logs.return_date')
+                ->distinct('users.username')
+                ->get(['users.username', 'users.phone']);
             
-            // Book::whereget();
-
             $arr = [];
             foreach ($users as $user) {
-                foreach ($forfeit_id as $id) {
-                    if (RentLog::where('id', $id)->where('username', $user->username)->where('return_date', '<', $dateDay->toDateTimeString())->exists()) {
+                foreach ($forfeitIds as $id) {
+                    $rentLog = RentLog::where('id', $id)
+                        ->where('username', $user->username)
+                        ->whereNotNull('rent_date')
+                        ->whereNotNull('return_date')
+                        ->where('return_date', '<', Carbon::now()->toDateTimeString())
+                        ->first();
+                    
+                    if ($rentLog) {
                         if (!isset($arr[$user->username])) {
                             $arr[$user->username] = [];
                         }
-                        $book_code = RentLog::where('id', $id)->value('book_code');
+                        $book_code = $rentLog->book_code;
                         $book = Book::where('book_code', $book_code)->get();
-                        $arr[$user->username][] = $book; // Add the id to the array for this username
+                        if (!in_array($book, $arr[$user->username])) {
+                            $arr[$user->username][] = $book;
+                        }
                     }
                 }
             }
 
-            // dd($arr);
-
-            // $forfeit_users = User::join('rent_logs', 'users.username', '=', 'rent_logs.username')
-            //     ->where('rent_logs.return_date', '>', $currTimeSec)
-            //     ->select('users.*')
-            //     ->distinct()
-            //     ->get();
-
-
+            $uniqueUsers = [];
+            foreach ($users as $user) {
+                if (!isset($uniqueUsers[$user->username])) {
+                    $uniqueUsers[$user->username] = $user;
+                }
+            }
+        
+            $categories = Category::all();
         }
-
-        $categories = Category::all();
-
-        return view('admin/dashboard', ['result' => $result, 'section' => $section, 'books' => $books, 'pinjam' => $pinjam, 'users' => $users, 'logs' => $logs, 'categories'=> $categories, 'confirm' => $confirm, 'reqs' => $reqs]);
-        return view('admin/dashboard', ['result' => $result, 'section' => $section, 'books' => $books, 'arrs' => $arr, 'users' => $users]);
-    }
+        
+        return view('admin/dashboard', [
+            'result' => $result,
+            'section' => $section,
+            'books' => $books,
+            'pinjam' => $pinjam,
+            'users' => $users,
+            // 'users' => $uniqueUsers,
+            'logs' => $logs,
+            'categories' => $categories,
+            'confirm' => $confirm,
+            'reqs' => $reqs,
+            // 'arrs' => $arr
+            
+        ]);
+    }        
+    
     public function add_category(Request $request)
     {
         $validated = $request->validate([

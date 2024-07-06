@@ -6,6 +6,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\ComponentController;
 use App\Http\Controllers\ReaderController;
 use App\Http\Controllers\RentLogsController;
+use App\Models\RentLog;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -87,5 +88,6 @@ Route::get('/dashboard/buku/edit-buku/{any}', function () {
 Route::put('/pinjam/{book_code}/user/{username}', [RentLogsController::class, 'update_status_buku']);
 Route::put('/verify/{username}', [AdminController::class, 'admin_verify_member']);
 Route::put('/ban/{username}', [AdminController::class, 'ban_member']);
+Route::get('/dashboard/denda/status/all', [RentLogsController::class, 'bool_status_denda']);
 
 

@@ -14,20 +14,6 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset ('lte/dist/css/adminlte.min.css ') }}">
     </head>
-<!-- 
-    @if(session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
-        </div>
-    @endif
-
-    @error('username')
-        <div class="alert alert-danger">{{ $message }}</div>
-    @enderror
-
-    @error('password')
-        <div class="alert alert-danger">{{ $message }}</div>
-    @enderror -->
 
     <body class="hold-transition login-page">
         <div class="login-box">
@@ -39,18 +25,39 @@
             <div class="card-body login-card-body">
             <p class="login-box-msg">Sign in to start your session</p>
 
+            @if(session('status'))
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    @foreach($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
+                </div>
+            @endif
             <form action="/login" method="post">
             @csrf
+
+                @error('username')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
                 <div class="input-group mb-3">
-                <input type="text" name="username" class="form-control" placeholder="username">
+                <input type="text" name="username" class="form-control" placeholder="username" autocomplete="off">
                 <div class="input-group-append">
                     <div class="input-group-text">
                     <span class="fas fa-envelope"></span>
                     </div>
                 </div>
                 </div>
+
+                @error('password')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
                 <div class="input-group mb-3">
-                <input type="password" name="password" class="form-control" placeholder="Password">
+                <input type="password" name="password" class="form-control" placeholder="Password" autocomplete="off">
                 <div class="input-group-append">
                     <div class="input-group-text">
                     <span class="fas fa-lock"></span>

@@ -38,21 +38,23 @@
             </td>
             <td>
                 @if ($user->status == 1)
-                    <p>Aktif</p>
+                    Aktif
                 @else
-                    <p>Non-Aktif</p>
+                    Ban
                 @endif
             </td>
             <td>
+            @if ($user->status == 0)
             <form action="/verify/{{ $user->username }}" method="POST">
             @csrf
             @method("PUT")
                 <button type="submit" class="btn btn-warning btn-sm">
                     <i class="fas fa-pencil-alt">
                     </i>
-                    Verify
+                    Unbanned
                 </button>
             </form>
+            @else
             <form action="/ban/{{ $user->username }}" method="POST">
             @csrf
             @method("PUT")
@@ -62,6 +64,7 @@
                     Ban
                 </button>
             </form>
+            @endif
             </td>
         </tr>
 

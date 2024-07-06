@@ -9,14 +9,20 @@
         </tr>
     </thead>
     <tbody>
+
         @foreach ($users as $i => $user)
+
         <tr>
-            <td>{{ $i + 1 }}</td>
+            <td>{{ $loop->iteration }}</td>
             <td>{{ $user->username }}</td>
             <td>{{ $user->phone }}</td>
+
             <td class="project-state">
-                <span class="badge badge-warning">Warning</span>
+                <span name="{{ $user->username }}" class="status-denda badge"></span>
             </td>
+            <!-- <td class="project-state">
+                <span class="status-denda badge badge-success">Clear</span>
+            </td> -->
             <td class="project-actions text-right">
                 
             <button onclick="showModal('{{ $user->username }}')" type="button" class="btn btn-primary btn-sm">

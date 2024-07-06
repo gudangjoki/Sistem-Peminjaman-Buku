@@ -40,9 +40,9 @@
             </td>
             <td class="project-state">
                 @if ($conf->status == 1)
-                    <span class="badge badge-success">Tersedia</span>
+                    <span class="badge badge-success">Sudah Dipinjam</span>
                 @else 
-                    <span class="badge badge-warning">Dipinjam</span>
+                    <span class="badge badge-warning">Akan Dipinjam</span>
                 @endif
             </td>
             <td class="project-actions text-right">
