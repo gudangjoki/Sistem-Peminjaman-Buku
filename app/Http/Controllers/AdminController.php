@@ -313,7 +313,7 @@ class AdminController extends Controller
         $segments = explode('/', trim($parsed_path_url, '/'));
     
         $result = [];
-            $pinjam = [];
+        $pinjam = [];
         $users = [];
         $logs = [];
         $categories = [];

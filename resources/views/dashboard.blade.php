@@ -65,7 +65,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <!-- Right navbar links -->
                 <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
                     <li class="nav-item">
-                        <a href="" class="btn btn-block btn-outline-secondary text-white px-5">Login</a>
+                        @if (session()->get('user'))
+                            <a href="/logout" class="btn btn-block btn-outline-secondary text-white px-5">Logout</a>
+                        @else
+                            <a href="/login" class="btn btn-block btn-outline-secondary text-white px-5">Login</a>
+                        @endif
                     </li>
                 </ul>
             </div>

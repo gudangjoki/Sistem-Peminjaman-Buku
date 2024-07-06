@@ -80,6 +80,9 @@ class BookController extends Controller
     }
 
     public function book_detail(Request $request, string $book_code) {
+        
+        $user = null;
+
         if ($request->session()->get('user')) {
             $user = $request->session()->get('user');
             // dd($user);

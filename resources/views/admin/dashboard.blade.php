@@ -68,9 +68,9 @@
                                             <div class="input-group-prepend mr-5">
                                             <select class="category form-control btn btn-default px-4 dropdown-toggle" onchange="getParamsQuery()">
                                                 <option selected disabled>Kategori</option>
-                                                @foreach ( $categories as $category )
+                                                <!-- @foreach($categories as $category)
                                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                                @endforeach
+                                                @endforeach -->
                                             </select>
                                                 <!-- <button type="button" class="btn btn-default px-4 dropdown-toggle" data-toggle="dropdown">
                                                     Kategori

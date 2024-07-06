@@ -16,10 +16,18 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->user() && $request->user()->role_id == 2) {
+        $user = $request->session()->get('user');
+
+        // dd($user);
+
+        if (!$user) {
+            return redirect('/login')->withErrors(['You do not have access to this section']);
+        }
+
+        if ($user['role_id'] === 1 || $user['role_id'] === 2) {
             return $next($request);
         }
 
-        return redirect('login')->withErrors(['You do not have access to this section']);
+        return redirect()->back()->withErrors(['You do not have access to this section']);
     }
 }
