@@ -50,7 +50,8 @@ Route::post('/category', [AdminController::class, "add_book_category"]);
 
 //fitur 6, 7, 9
 Route::post('/rent_book', [RentLogsController::class, "borrow_book"]);
-Route::get('/invoice/{book_code}', [ReaderController::class, "invoice"]);
+Route::get('/invoice/{book_code}', [ReaderController::class, "create_invoice"]);
+Route::get('/invoice/{book_code}/{id}', [ReaderController::class, "show_invoice"]);
 
 //fitur 11
 Route::get('/rented_books', [AdminController::class, "book_list_rented"]);
@@ -62,6 +63,7 @@ Route::get('/forfeits', [RentLogsController::class, "user_forfeit"]);
 Route::get('books/log_book/{book_code}', [RentLogsController::class, "log_rent_book"]);
 
 Route::get('/dashboard/home', [BookController::class, 'index']);
+Route::get('/dashboard/histori', [BookController::class, 'index']);
 Route::get('/books/{book_code}', [BookController::class, "book_detail"]);
 
 // Route::get('*', function() {

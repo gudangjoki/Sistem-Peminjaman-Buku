@@ -8,14 +8,14 @@
             <form action="/buku" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
-                    <div class="col-sm-6">
+                    <!-- <div class="col-sm-6"> -->
                         <!-- text input -->
                         <!-- <div class="form-group">
                             <label>Kode Buku</label>
                             <input type="text" class="form-control" placeholder="Enter ...">
                         </div> -->
-                    </div>
-                    <div class="col-sm-6">
+                    <!-- </div> -->
+                    <div class="col-sm-12">
                         <!-- text input -->
                         <div class="form-group">
                             <label>Judul Buku</label>
@@ -27,22 +27,21 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label>Kategori</label>
-                                <select name="category" class="category form-control btn btn-default px-4 dropdown-toggle">
-                                    <option selected disabled>Kategori</option>
+                            <div class="select select2-dark">
+                                <select name="category[]" multiple="multiple" data-placeholder="Select a State" class="select2 category form-control" style="width: 100%;">
                                     @foreach ( $categories as $category )
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="exampleInputFile">File input</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" name="cover" class="custom-file-input" id="exampleInputFile">
-                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                </div>
+                            <div class="custom-file">
+                                <input type="file" name="cover" class="custom-file-input" id="exampleInputFile">
+                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                             </div>
                         </div>
                     </div>

@@ -24,7 +24,7 @@
         @else
             <a href="" class="btn btn-info disabled">Ayo Pinjam</a>
         @endif
-        </div>   
+        </div>      
     </div>
     <!-- /.card-footer -->
 </div>

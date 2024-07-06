@@ -10,6 +10,8 @@ class RentLog extends Model
     use HasFactory;
 
     public $timestamps = false;
+    
+    protected $table = 'rent_logs';
 
     protected $fillable = [
         'id',

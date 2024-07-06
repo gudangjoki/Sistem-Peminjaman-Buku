@@ -76,6 +76,8 @@ class AdminController extends Controller
 
     public function index_update_book(Request $request, string $book_code) {
         $book = Book::where('book_code', '=', $book_code)->first();
+        $selectedCategories = [];
+        $selectedCategories = DB::table('book_categories')->where('book_code', $book->book_code)->pluck('category_id')->toArray();
         // Category::where('book_code', '=', $book_code)->first();
 
         if ( !$book ) {
@@ -89,6 +91,7 @@ class AdminController extends Controller
             // redirect ke halaman create atau update buku 
             return redirect("../../dashboard/buku/edit-book/" . $book_code)->withErrors('categories not found in database');
         }
+        
 
         $url = $request->fullUrl();
 
@@ -108,7 +111,7 @@ class AdminController extends Controller
 
         $books = [];
 
-        return view("admin.dashboard", ['book' => $book, 'result' => $result, 'books' => $books, 'category' => $category, 'categories' => $categories]);
+        return view("admin.dashboard", ['book' => $book, 'result' => $result, 'books' => $books, 'category' => $category, 'categories' => $categories, 'selectedCategories'=>$selectedCategories]);
     }
 
     public function book_upload(Request $request) {
@@ -143,69 +146,147 @@ class AdminController extends Controller
         // $book->book_file = $bookFilePath;
 
         $book->save();
-
+        
         if ($request->has('category')) {
             // dd($request->category);
-            DB::table('book_categories')->insert([
-                'book_code' => $book->book_code,
-                'category_id' => $request->category
-            ]);
+            $categories = $request->input('category');
+            // dd($categories);
+            foreach ($categories as $category_id) {
+                DB::table('book_categories')->insert([
+                    'book_code' => $book->book_code,
+                    'category_id' => $category_id
+                ]);
+            }
         }
     
         return redirect()->back()->with('status', 'success');
     }    
-
     public function update_book(Request $request, string $book_code) {
         $book = Book::where("book_code", "=", $book_code)->first();
-
-        if ( $book == null ) {
+    
+        if ($book == null) {
             return redirect("../../books")->withErrors("book not found in database");
         }
-
-        // dd($request->all());
-
+    
         $validated = $request->validate([
-            // 'name' => 'required|string|max:255',
             'title' => 'required|string|max:255',
-            // 'book_code' => 'required|uuid',
             'description' => 'required|string|max:255',
-            // 'status' => 'required|boolean',
             'cover' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
-
+    
         if ($request->hasFile('cover')) {
             $cover = $request->file('cover');
             $filePath = 'covers/';
-
-            // ganti nama
             $fileName = time() . '_' . $cover->getClientOriginalName();
-            // pindahkan file gambar
             $cover->move(public_path($filePath), $fileName);
-    
-            // Set the book cover path
             $book->cover = $filePath . $fileName;
         }
-
+    
         $book->book_code = $book_code;
         $book->title = $validated['title'];
         $book->description = $validated['description'];
         $book->status = 1;
-
         $book->save();
-
-        // dd($request->category);
-
-        // $book->categories()->attach($request->category);
+    
         if ($request->has('category')) {
-            DB::table('book_categories')
-            ->where('book_code', $book->book_code)
-            ->update([
-                'category_id' => $request->category
-            ]);
+            $newCategories = $request->input('category');
+            $existingCategories = DB::table('book_categories')->where('book_code', $book_code)->pluck('category_id')->toArray();
+    
+            if (count($newCategories) == count($existingCategories)) {
+                foreach ($newCategories as $index => $category_id) {
+                    DB::table('book_categories')
+                        ->where('book_code', $book_code)
+                        ->where('category_id', $existingCategories[$index])
+                        ->update(['category_id' => $category_id]);
+                }
+            } else {
+                // Tambah kategori baru
+                $categoriesToAdd = array_diff($newCategories, $existingCategories);
+                if (count($categoriesToAdd) > 0) {
+                    foreach ($categoriesToAdd as $category_id) {
+                        DB::table('book_categories')->insert([
+                            'book_code' => $book->book_code,
+                            'category_id' => $category_id
+                        ]);
+                    }
+                }
+    
+                // Hapus kategori yang tidak ada dalam newCategories
+                $categoriesToRemove = array_diff($existingCategories, $newCategories);
+                if (count($categoriesToRemove) > 0) {
+                    DB::table('book_categories')
+                        ->where('book_code', $book_code)
+                        ->whereIn('category_id', $categoriesToRemove)
+                        ->delete();
+                }
+            }
         }
-
+    
         return redirect("../../dashboard/buku");
     }
+    
+    // public function update_book(Request $request, string $book_code) {
+    //     $book = Book::where("book_code", "=", $book_code)->first();
+
+    //     if ( $book == null ) {
+    //         return redirect("../../books")->withErrors("book not found in database");
+    //     }
+
+    //     // dd($request->all());
+
+    //     $validated = $request->validate([
+    //         // 'name' => 'required|string|max:255',
+    //         'title' => 'required|string|max:255',
+    //         // 'book_code' => 'required|uuid',
+    //         'description' => 'required|string|max:255',
+    //         // 'status' => 'required|boolean',
+    //         'cover' => 'image|mimes:jpeg,png,jpg|max:2048'
+    //     ]);
+
+    //     if ($request->hasFile('cover')) {
+    //         $cover = $request->file('cover');
+    //         $filePath = 'covers/';
+
+    //         // ganti nama
+    //         $fileName = time() . '_' . $cover->getClientOriginalName();
+    //         // pindahkan file gambar
+    //         $cover->move(public_path($filePath), $fileName);
+    
+    //         // Set the book cover path
+    //         $book->cover = $filePath . $fileName;
+    //     }
+
+    //     $book->book_code = $book_code;
+    //     $book->title = $validated['title'];
+    //     $book->description = $validated['description'];
+    //     $book->status = 1;
+
+    //     $book->save();
+
+    //     // dd($request->category);
+
+    //     // $book->categories()->attach($request->category);
+    //     if ($request->has('category')) {
+    //         $categories = $request->input('category');
+    //         // dd($categories);
+    //         foreach ($categories as $category_id) {
+    //             if ($book->book_code != $category_id){
+    //                 DB::table('book_categories')->insert([
+    //                     'book_code' => $book->book_code,
+    //                     'category_id' => $category_id
+    //                 ]);
+    //             }else{
+    //                 DB::table('book_categories')
+    //                 ->where('book_code', $book->book_code)
+    //                 ->update([
+    //                     'category_id' => $category_id
+    //                 ]);
+    //             }
+    //         }
+    //     }
+
+    //     return redirect("../../dashboard/buku");
+    // }
 
     public function book_list_rented() {
         $books = Book::all()->where('status', '=', 1);
@@ -279,7 +360,10 @@ class AdminController extends Controller
         }else if(in_array('user', $result)){
             $users = DB::table('users')->where('role_id', 2)->whereNot('status', null)->get();
         }else if(in_array('log', $result)){
-            $logs = DB::table('rent_logs')->get();
+            $logs = DB::table('rent_logs')
+            ->whereNotNull('rent_date')
+            ->WhereNotNull('return_date')
+            ->get();
         }else if(in_array('kategori', $result)){
             $categories = DB::table('categories')->get();
         }else if(in_array('confirm', $result)){

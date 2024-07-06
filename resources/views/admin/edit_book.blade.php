@@ -28,17 +28,18 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label>Kategori</label>
-                            <select name="category" class="form-control select2">
-                            <option selected="selected" disabled>Pilih Kategori</option>
-                                @foreach ($categories as $category)
-                                <option value="{{$category->id}}">{{$category->name}}</option>
-                                <!-- <option>California</option>
-                                <option>Delaware</option>
-                                <option>Tennessee</option>
-                                <option>Texas</option>
-                                <option>Washington</option> -->
-                                @endforeach
-                            </select>
+                            <div class="select select2-dark">
+                                <select name="category[]" multiple="multiple" data-placeholder="Select a State" class="select2 category form-control" style="width: 100%;">
+                                    @foreach ( $categories as $category )
+                                    <option value="{{ $category->id }}" 
+                                        @if (in_array($category->id, $selectedCategories)) 
+                                            selected 
+                                        @endif>
+                                        {{ $category->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -46,11 +47,8 @@
                             <label for="exampleInputFile">File input</label>
                             <div class="input-group">
                                 <div class="custom-file">
-                                <input type="file" name="cover" value="{{ $book->cover }}" class="custom-file-input" id="exampleInputFile">
-                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
-                                </div>
-                                <div class="input-group-append">
-                                <span class="input-group-text">Upload</span>
+                                    <input type="file" name="cover" class="custom-file-input" id="exampleInputFile">
+                                    <label class="custom-file-label" for="exampleInputFile"> {{ $book->cover }}</label>
                                 </div>
                             </div>
                         </div>

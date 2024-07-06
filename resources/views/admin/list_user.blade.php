@@ -43,7 +43,7 @@
                     Ban
                 @endif
             </td>
-            <td>
+            <td class="project-actions text-right">
             @if ($user->status == 0)
             <form action="/verify/{{ $user->username }}" method="POST">
             @csrf

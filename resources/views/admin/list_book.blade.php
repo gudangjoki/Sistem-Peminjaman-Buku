@@ -25,9 +25,9 @@
                         <a href="buku/edit-buku/{{ $book->book_code }}" class="btn btn-warning btn-sm">
                             <i class="fas fa-pencil-alt"></i> Edit
                         </a>
-                        <a class="btn btn-danger btn-sm" href="#">
+                        <!-- <a class="btn btn-danger btn-sm" href="#">
                             <i class="fas fa-trash"></i> Delete
-                        </a>
+                        </a> -->
                     </div>
                 </div>
             </div>

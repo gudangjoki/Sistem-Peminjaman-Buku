@@ -59,4 +59,8 @@ class ComponentController extends Controller
     // public function index_edit_book() {
     //     return view("admin.edit_book");
     // }
+
+    public function index_histori_user() {
+        return view("histori");
+    }
 }

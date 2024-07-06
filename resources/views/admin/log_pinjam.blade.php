@@ -34,10 +34,18 @@
                 {{$log->book_code}}
             </td>
             <td>
-                {{$log->rent_date}}
+                @if(is_null($log->rent_date))
+                    <span class="badge badge-danger">Belum Konfirmasi</span>
+                @else
+                    {{$log->rent_date}}
+                @endif
             </td>
             <td>
-                {{$log->return_date}}
+                @if(is_null($log->return_date))
+                    <span class="badge badge-warning">Belum Konfirmasi</span>
+                @else
+                    {{$log->return_date}}
+                @endif
             </td>
             <td>
                 @if(is_null($log->actual_return_date))
