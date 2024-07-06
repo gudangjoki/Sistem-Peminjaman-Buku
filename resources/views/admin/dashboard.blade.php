@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Peminjmanan Buku</title>
     <link rel="icon" href="{{ asset('book-solid.svg') }}" type="image/icon type">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- Font Awesome Icons -->
@@ -365,6 +366,46 @@ function status() {
             status();
         });
 
+        // function showModal(username) {
+        //     let url = `/dashboard/denda/all`;
+        //     console.log(url);
+        //     fetch(url, {
+        //             method: 'GET',
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             }
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log(data.message);
+        //             let modal = $('#modal-default-' + username);
+        //             let modalBody = modal.find('.modal-body');
+        //             modalBody.empty();
+        //                 // if (data.message.indexOf(username) === -1) {
+        //                 //     document.querySelector(".status-denda").value = "Sudah Bayar"
+        //                 // }
+        //             if (data.message[username]) {
+        //                 let values = data.message[username];
+        //                 localStorage.setItem(username, JSON.stringify(values));
+        //                 modalBody.append('<table class="table table-striped projects"><thead><tr><th>Buku</th><th>Action</th></tr></thead><tbody>');
+        //                 let tbody = modalBody.find('tbody');
+        //                 values.forEach(function(value) {
+        //                     console.log(value);
+        //                     value.map(function(val) {
+        //                         tbody.append('<tr><td><a>' + val.title + '</a><br/><small>' + val.book_code + '</small></td><td><a href="/confim/'+ val.book_code +'" class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i> Konfirmasi</a></td></tr>');
+        //                     })
+                            
+        //                 });
+        //                 modalBody.append('</tbody></table>');
+        //             } else {
+        //                 modalBody.append('<p>No data available</p>');
+        //             }
+
+        //             modal.modal('show');
+        //         })
+        //         .catch(error => console.error('Error fetching data:', error));
+        // }
+
         function showModal(username) {
             let url = `/dashboard/denda/all`;
             console.log(url);
@@ -380,36 +421,66 @@ function status() {
                     let modal = $('#modal-default-' + username);
                     let modalBody = modal.find('.modal-body');
                     modalBody.empty();
-                        // if (data.message.indexOf(username) === -1) {
-                        //     document.querySelector(".status-denda").value = "Sudah Bayar"
-                        // }
                     if (data.message[username]) {
                         let values = data.message[username];
                         localStorage.setItem(username, JSON.stringify(values));
+                        modalBody.append('<table class="table table-striped projects"><thead><tr><th>Buku</th><th>Action</th></tr></thead><tbody>');
+                        let tbody = modalBody.find('tbody');
                         values.forEach(function(value) {
                             console.log(value);
-    
                             value.map(function(val) {
-                                modalBody.append('<div classname="border-3">');
-                                modalBody.append('<p><strong>Title:</strong> ' + val.title + '</p>');
-                                modalBody.append('<p><strong>Book Code:</strong> ' + val.book_code + '</p>');
-                                // modalBody.append('<p><strong>Description:</strong> ' + val.description + '</p>');
-                                // modalBody.append('<img src="' + val.cover + '" alt="Book Cover" style="width:100px;height:auto;">');
-                                modalBody.append('<hr>');
-                                modalBody.append('<hr>');
-                                modalBody.append('<div>');
-                            })
+                                tbody.append('<tr><td><a>' + val.title + '</a><br/><small>' + val.book_code + '</small></td><td><a href="#" class="btn btn-warning btn-sm konfirmasi-btn" data-book-id="' + val.id + '"><i class="fas fa-pencil-alt"></i> Konfirmasi</a></td></tr>');
+                            });
                         });
+                        modalBody.append('</tbody></table>');
                     } else {
                         modalBody.append('<p>No data available</p>');
                     }
 
                     modal.modal('show');
+                    
+                    // Add event listener for the confirmation buttons
+                    $('.konfirmasi-btn').on('click', function(e) {
+                        e.preventDefault();
+                        let bookId = $(this).data('book-id');
+                        updateBookStatus(bookId);
+                    });
                 })
                 .catch(error => console.error('Error fetching data:', error));
         }
 
-            function confirmation(e, username) {
+        function updateBookStatus(bookId) {
+            let url = `/update-book-status`;
+            let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            if (!csrfToken) {
+                console.error('CSRF token not found');
+                return;
+            }
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    id: bookId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Book status updated successfully');
+                } else {
+                    alert('Failed to update book status');
+                }
+            })
+            .catch(error => console.error('Error updating book status:', error));
+        }
+
+
+        function confirmation(e, username) {
             let data = localStorage.getItem(username);
             const { name, value } = e.target;
             fetch(`/update/denda/${username}`, {
@@ -423,7 +494,6 @@ function status() {
             .then(data => console.log(data))
             .catch(error => console.error('Error fetching data:', error));
         }
-
         $(function() {
             //Initialize Select2 Elements
             $('.select2').select2();

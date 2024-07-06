@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\RentLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -103,5 +104,27 @@ class BookController extends Controller
             return view('not_found');
         }
         return view('dashboard', ['book' => $book, 'result' => $result, 'user' => $user]);
+    }
+    public function updateStatus(Request $request)
+    {
+        $invoiceId = $request->id;
+
+        // dd($bookId);
+        $rentLog = RentLog::find($invoiceId);
+
+        // dd($rentLog->book_code);
+
+        $book = Book::where('book_code', $rentLog->book_code)->update(['status' => 1]);
+
+        // dd($book->return_date);
+        // dd(Carbon::now());
+        if ($rentLog && $book) {
+            // Update the status of the book
+            $rentLog->actual_return_date = Carbon::now(); // or whatever status you want to set
+            $rentLog->save();
+            return response()->json(['success' => true, 'message' => 'Book status updated successfully']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Book not found']);
+        }
     }
 }

@@ -48,11 +48,20 @@
                 @endif
             </td>
             <td>
-                @if(is_null($log->actual_return_date))
-                    <span class="badge badge-danger">Belum Dikembalikan</span>
-                @else
+                
+                @php
+                    $today = now();
+                    $returnDate = \Carbon\Carbon::parse($log->return_date);
+                @endphp
+
+                @if ($log->actual_return_date != null)
                     {{$log->actual_return_date}}
+                @elseif($returnDate->lessThan($today))
+                    <span class="badge badge-danger">Terlambat</span>
+                @else
+                    <span class="badge badge-info">Dipinjam</span>
                 @endif
+                
             </td>
         </tr>
         @endforeach
