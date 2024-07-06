@@ -25,17 +25,9 @@
             </td> -->
             <td class="project-actions text-right">
                 
-            <button onclick="showModal('{{ $user->username }}')" type="button" class="btn btn-primary btn-sm">
-                <i class="fas fa-folder"></i> View
-            </button>
-            <form action="/update/denda/{{ $user->username }}" method="POST">
-                @csrf
-                @method('PUT')
-                <button type="submit" value="{{ $user->username }}" class="btn btn-warning btn-sm">
-                    <i class="fas fa-pencil-alt"></i> Konfirmasi
+                <button onclick="showModal('{{ $user->username }}')" type="button" class="btn btn-primary btn-sm">
+                    <i class="fas fa-folder"></i> View
                 </button>
-            </form>
-
             </td>
         </tr>
         @endforeach
@@ -57,7 +49,6 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>

@@ -430,6 +430,7 @@ class AdminController extends Controller
                             $arr[$user->username] = [];
                         }
                         $book_code = $rentLog->book_code;
+                        // join rentlog dan book get id dan data buku
                         $book = Book::where('book_code', $book_code)->get();
                         if (!in_array($book, $arr[$user->username])) {
                             $arr[$user->username][] = $book;
@@ -535,10 +536,17 @@ class AdminController extends Controller
                         $arr[$user->username] = [];
                     }
                     $book_code = RentLog::where('id', $id)->value('book_code');
-                    $book = Book::where('book_code', $book_code)->get();
+                    // join tabel book dengan rent_logs
+                    // $book = Book::where('book_code', $book_code)->get();
+                    $book= DB::table('rent_logs')
+                    ->join('books', 'rent_logs.book_code', '=', 'books.book_code')
+                    ->where('rent_logs.book_code', $book_code)
+                    ->select('rent_logs.*', 'books.*')
+                    ->get();
                     $arr[$user->username][] = $book; // Add the id to the array for this username
                 }
             }
+            // dd($arr);
         }
         return response()->json(['message' => $arr], 200);
     }
