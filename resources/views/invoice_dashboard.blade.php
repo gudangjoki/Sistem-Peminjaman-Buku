@@ -54,10 +54,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- Left navbar links -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a href="index3.html" class="nav-link">Home</a>
+                            <a href="/dashboard/home" class="nav-link">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Contact</a>
+                            <a href="/dashboard/histori" class="nav-link">History</a>
                         </li>
                     </ul>
                 </div>
@@ -112,7 +112,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             <b>Invoice #{{$book->id}}</b><br>
                                             <br>
                                             <b>Tanggal Dipinjam:</b>{{$book->rent_date}}<br>
-                                            <b>Tanggal Dikembalikan:</b>{{$book->return_date}}<br>
+                                            <b>Tanggal Wajib Kembali:</b>{{$book->return_date}}<br>
+                                            <b>Tanggal Buku Dikembalikan:</b>{{$book->actual_return_date}}<br>
                                         </div>
                                         <!-- /.col -->
                                     </div>

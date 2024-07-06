@@ -47,8 +47,8 @@
             </td>
             <td class="project-actions text-right">
                 <button type="submit" class="btn btn-warning btn-sm">
-                    <i class="fas fa-trash">
-                    </i>
+                    <!-- <i class="fas fa-trash">
+                    </i> -->
                     Konfirmasi
                 </button>
             </td>

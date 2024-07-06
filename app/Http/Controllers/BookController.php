@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\RentLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -58,15 +60,23 @@ class BookController extends Controller
         $segments = explode('/', trim($parsed_path_url, '/'));
 
         $result = [];
+        $logs = [];
 
         foreach ($segments as $index => $segment) {
             $result['segment' . ($index + 1)] = $segment;
         }
         
         // dd($result);
+        if (in_array('histori', $result)) {
+            $logs = RentLog::select('rent_logs.id', 'rent_logs.username', 'rent_logs.book_code', 'rent_logs.rent_date', 'rent_logs.return_date', 'rent_logs.actual_return_date', 'books.title', 'books.cover')
+            ->where('rent_logs.username',  $request->session()->get('user'))
+            ->join('books', 'rent_logs.book_code', '=', 'books.book_code')
+            ->orderBy('rent_logs.rent_date', 'desc') 
+            ->get();
+            // dd($logs);
+        }
         
-        
-        return view('dashboard', ['result' => $result, 'books' => $books, 'categories' => $categories, 'count_books' => $count_books_active, 'total_user' => $user_active]);
+        return view('dashboard', ['result' => $result, 'books' => $books, 'categories' => $categories, 'count_books' => $count_books_active, 'total_user' => $user_active, 'logs'=>$logs]);
     }
 
     public function book_detail(Request $request, string $book_code) {

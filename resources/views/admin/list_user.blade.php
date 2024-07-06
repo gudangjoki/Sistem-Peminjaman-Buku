@@ -43,7 +43,7 @@
                     <p>Non-Aktif</p>
                 @endif
             </td>
-            <td>
+            <td class="project-actions text-right">
             <form action="/verify/{{ $user->username }}" method="POST">
             @csrf
             @method("PUT")

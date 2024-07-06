@@ -17,6 +17,8 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('lte/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{{ asset('lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
     <style>
         .fixed-size-img {
             width: 100%; /* atau set ukuran spesifik seperti width: 150px; height: 200px; */
@@ -178,16 +180,16 @@
             <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                                <div class="row">
-                                    <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-8">
                             <h1>List Kategori</h1>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button type="button" class="btn btn-success float-right px-3" data-toggle="modal" data-target="#modal-default">
-                                            Tambah
-                                        </button>
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-success float-right px-3" data-toggle="modal" data-target="#modal-default">
+                                Tambah
+                            </button>
+                        </div>
+                    </div>
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
@@ -272,7 +274,7 @@
             <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
-                    <h1>Tambah Buku</h1>
+                    <h1>Edit Buku</h1>
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
@@ -312,7 +314,8 @@
     <script src="{{ asset('lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('lte/dist/js/adminlte.js') }}"></script>
-
+    <!-- bs-custom-file-input -->
+    <script src="{{ asset('lte/plugins/bs-custom-file-input/bs-custom-file-input.min.js ') }}"></script>
     <!-- jQuery Mapael -->
     <script src="{{ asset('lte/plugins/jquery-mousewheel/jquery.mousewheel.js') }}"></script>
     <script src="{{ asset('lte/plugins/raphael/raphael.min.js') }}"></script>
@@ -322,6 +325,9 @@
     <script src="{{ asset('lte/plugins/select2/js/select2.full.min.js') }}"></script>
     <!-- ChartJS -->
     <script src="{{ asset('lte/plugins/chart.js/Chart.min.js') }}"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="{{ asset('lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
     <script>
         function showModal(username) {
             let url = `/dashboard/denda/all`;
@@ -382,6 +388,7 @@
         $(function() {
             //Initialize Select2 Elements
             $('.select2').select2();
+            
         });
 
         function dynamicInput() {
@@ -414,6 +421,9 @@
                     console.error('Error:', error);
                 });
         }
+        $(function () {
+            bsCustomFileInput.init();
+        });
     </script>
 </body>
 

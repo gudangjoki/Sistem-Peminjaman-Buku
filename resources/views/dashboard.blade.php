@@ -54,10 +54,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- Left navbar links -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a href="index3.html" class="nav-link">Home</a>
+                            <a href="/dashboard/home" class="nav-link">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">Contact</a>
+                            <a href="/dashboard/histori" class="nav-link">History</a>
                         </li>
                     </ul>
                 </div>
@@ -122,6 +122,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </div>
         </div>
         @break
+        @case(in_array('histori', $result) && in_array('dashboard', $result))
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="container-fluid px-md-5 mt-md-5 ml-0 mt-0">
+                    <div class="container">@include('user.list_pinjam')</div>
+                </div>
+            </div>
+        </div>
+        @break
         @default
         <div>Section not found.</div>
         @break
@@ -146,44 +155,45 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{ asset('lte/plugins/bootstrap/js/bootstrap.bundle.min.js ') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('lte/dist/js/adminlte.min.js ') }}"></script>
+
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const rentButton = document.querySelector('.rent-button');
+        document.addEventListener('DOMContentLoaded', function() {
+            const rentButton = document.querySelector('.rent-button');
 
-    if (rentButton) {
-        rentButton.addEventListener('click', function() {
-            const bookCode = rentButton.getAttribute('data-book_code');
-            const username = rentButton.getAttribute('data-username');
+            if (rentButton) {
+                rentButton.addEventListener('click', function() {
+                    const bookCode = rentButton.getAttribute('data-book_code');
+                    const username = rentButton.getAttribute('data-username');
 
-            console.log(bookCode);
+                    console.log(bookCode);
 
-            fetch('/rent_book', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: new URLSearchParams({
-                    'book_code': bookCode,
-                    'username': username
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.redirect) {
-                    window.location.href = data.url;
-                }
-                console.log(data.error);
-                if (data.error) {
-                    alert(data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                    fetch('/rent_book', {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: new URLSearchParams({
+                            'book_code': bookCode,
+                            'username': username
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.redirect) {
+                            window.location.href = data.url;
+                        }
+                        console.log(data.error);
+                        if (data.error) {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
+            }
         });
-    }
-});
 
 
 
