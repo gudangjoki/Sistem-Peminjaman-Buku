@@ -56,7 +56,7 @@ class AuthController extends Controller
                 }
             }
     
-            return redirect('login')->withErrors(['username' => 'No appropriate role assigned to this username']);
+            return redirect('login')->withErrors(['username' => 'No role found']);
         } else {
             return redirect('login')->withErrors(['username' => 'Invalid username or password']);
         }
@@ -76,12 +76,16 @@ class AuthController extends Controller
                 // 'name' => 'required|string|max:255',
                 'username' => 'required|string|max:255|unique:users',
                 'password' => 'required|string',
+                'phone' => 'required|integer|min:8|max:20',
+                'address' => 'required|string|max:100',
             ]);
         
             $new_user = new User;
             // $new_user->name = $validate['name'];
             $new_user->username = $validate['username'];
             $new_user->password = bcrypt($validate['password']);
+            $new_user->phone = $validate['phone'];
+            $new_user->address = $validate['address'];
             $new_user->role_id = 1;
             $new_user->save();
     

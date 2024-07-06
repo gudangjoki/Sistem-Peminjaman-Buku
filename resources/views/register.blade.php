@@ -3,7 +3,7 @@
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Registration Page</title>
+    <title>Peminjaman Buku | Registration Page</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -14,10 +14,13 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset ('lte/dist/css/adminlte.min.css ') }}">
     </head>
+    @error
+    
+    @enderror
     <body class="hold-transition register-page">
         <div class="register-box">
         <div class="register-logo">
-            <a href="{{ asset ('lte/index2.html ') }}"><b>Admin</b>LTE</a>
+            <a href="{{ asset ('lte/index2.html ') }}">Peminjaman Buku</a>
         </div>
 
         <div class="card">
@@ -50,14 +53,22 @@
                     </div>
                 </div>
                 </div>
-                <!-- <div class="input-group mb-3">
-                <input type="password" class="form-control" placeholder="Retype password">
+                <div class="input-group mb-3">
+                <input type="text" name="phone" class="form-control" placeholder="Phone">
                 <div class="input-group-append">
                     <div class="input-group-text">
                     <span class="fas fa-lock"></span>
                     </div>
                 </div>
-                </div> -->
+                </div>
+                <div class="input-group mb-3">
+                <input type="text" class="form-control" name="address" placeholder="Address">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                    <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+                </div>
                 <div class="row">
                 <div class="col-8">
                     <div class="icheck-primary">

@@ -16,29 +16,36 @@ class BookSeeder extends Seeder
         DB::table('books')->insert([
             [
                 'book_code' => Str::uuid(),
-                'title' => 'Book One',
+                'title' => 'Reckless (The Powerless Trilogy)',
                 'slug' => 'book-one',
-                'description' => 'Description for Book One',
-                'cover' => 'cover1.jpg',
+                'description' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem quam beatae eligendi velit et eveniet saepe nemo sed sunt nulla.', 
+                'cover' => 'covers/1.jpg',
                 'status' => true,
             ],
             [
                 'book_code' => Str::uuid(),
-                'title' => 'Book Two',
+                'title' => 'The Women: A Novel',
                 'slug' => 'book-two',
-                'description' => 'Description for Book Two',
-                'cover' => 'cover2.jpg',
+                'description' => 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Praesentium quaerat tenetur enim expedita animi quos!',
+                'cover' => 'covers/2.jpg',
                 'status' => true,
             ],
             [
                 'book_code' => Str::uuid(),
-                'title' => 'Book Three',
+                'title' => 'The Housemaid Is Watching',
                 'slug' => 'book-three',
-                'description' => 'Description for Book Three',
-                'cover' => 'cover3.jpg',
+                'description' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit', 
+                'cover' => 'covers/3.jpg',
                 'status' => false,
             ],
-            // Add more books as needed
+            [
+                'book_code' => Str::uuid(),
+                'title' => 'All the Colors of the Dark',
+                'slug' => 'book',
+                'description' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit', 
+                'cover' => 'covers/4.png',
+                'status' => false,
+            ],
         ]);
     }
 }
