@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="{{ asset('lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
+    <!-- <link rel="stylesheet" href="{{ asset('lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"> -->
     <style>
         .fixed-size-img {
             width: 100%; /* atau set ukuran spesifik seperti width: 150px; height: 200px; */
@@ -69,9 +69,9 @@
                                             <div class="input-group-prepend mr-5">
                                             <select class="category form-control btn btn-default px-4 dropdown-toggle" onchange="getParamsQuery()">
                                                 <option selected disabled>Kategori</option>
-                                                @foreach ( $categories as $category )
+                                                <!-- @foreach($categories as $category)
                                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                                @endforeach
+                                                @endforeach -->
                                             </select>
                                                 <!-- <button type="button" class="btn btn-default px-4 dropdown-toggle" data-toggle="dropdown">
                                                     Kategori
@@ -327,7 +327,7 @@
     <!-- ChartJS -->
     <script src="{{ asset('lte/plugins/chart.js/Chart.min.js') }}"></script>
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="{{ asset('lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <!-- <script src="{{ asset('lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script> -->
 
     <script>
 

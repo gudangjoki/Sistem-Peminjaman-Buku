@@ -19,11 +19,18 @@
             <div class="mt-4 text-right">
                 <!-- <form action="../rent_book" method="POST" id="rentBookForm"> -->
                     <!-- @csrf -->
-                    <button type="submit" class="rent-button btn btn-primary btn-lg"
+                     @if(!$user)
+                     <button type="submit" class="rent-button btn btn-primary btn-lg"
+                        data-book_code="{{ $book->book_code }}" disabled>
+                            Login Dulu, Baru Bisa Pinjam
+                    </button>
+                     @else
+                     <button type="submit" class="rent-button btn btn-primary btn-lg"
                         data-book_code="{{ $book->book_code }}" 
                         data-username="{{ $user['username'] }}">
                             Pinjam Sekarang
                     </button>
+                     @endif
                 <!-- </form> -->
             </div>
 

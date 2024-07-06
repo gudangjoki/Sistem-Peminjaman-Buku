@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\RentLog;
 use App\Models\User;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -176,5 +177,16 @@ class ReaderController extends Controller
             'title' => $title,
             'user' => $user
         ]);
-    }    
+    }
+    
+    public function logout(Request $request) {
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+     
+        $request->session()->regenerateToken();
+     
+        return redirect('/login');
+    }
 }

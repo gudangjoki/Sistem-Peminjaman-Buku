@@ -12,7 +12,7 @@
             <div class="row">
                 <div class="col-12">
                     <h4>
-                    <i class="fas fa-globe"></i> AdminLTE, Inc.
+                    <i class="fas fa-globe"></i> Peminjaman Buku
                     <small class="float-right">Date: 2/10/2014</small>
                     </h4>
                 </div>

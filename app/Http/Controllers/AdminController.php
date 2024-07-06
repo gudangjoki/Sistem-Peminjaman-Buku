@@ -75,9 +75,15 @@ class AdminController extends Controller
     }
 
     public function index_update_book(Request $request, string $book_code) {
+
+        if ($book_code === null) {
+            return redirect('/dashboard/buku');
+        }
+
         $book = Book::where('book_code', '=', $book_code)->first();
         $selectedCategories = [];
-        $selectedCategories = DB::table('book_categories')->where('book_code', $book->book_code)->pluck('category_id')->toArray();
+        // $selectedCategories = DB::table('book_categories')->where('book_code', $book->book_code)->pluck('category_id')->toArray(); //bug
+        $selectedCategories = DB::table('book_categories')->where('book_code', $book_code)->pluck('category_id')->toArray(); //bug
         // Category::where('book_code', '=', $book_code)->first();
 
         if ( !$book ) {
@@ -313,7 +319,7 @@ class AdminController extends Controller
         $segments = explode('/', trim($parsed_path_url, '/'));
     
         $result = [];
-            $pinjam = [];
+        $pinjam = [];
         $users = [];
         $logs = [];
         $categories = [];
